@@ -1,0 +1,2530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UpStride - Student Pitch Evaluation Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark Mode */
+        body.dark {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        body.dark nav {
+            background: #1e293b;
+        }
+
+        body.dark .logo {
+            color: #e2e8f0;
+        }
+
+        body.dark .nav-links a {
+            color: #94a3b8;
+        }
+
+        body.dark .nav-links a:hover, 
+        body.dark .nav-links a.active {
+            color: #60a5fa;
+        }
+
+        body.dark .benefit-card,
+        body.dark .mentor-card,
+        body.dark .booking-section,
+        body.dark .filters,
+        body.dark .sessions-list,
+        body.dark .stat-card,
+        body.dark .modal-content,
+        body.dark .idea-card {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+
+        body.dark .benefit-card h3,
+        body.dark .mentor-info h3,
+        body.dark .idea-title {
+            color: #e2e8f0;
+        }
+
+        body.dark .filter-group select,
+        body.dark .filter-group input {
+            background: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+
+        body.dark .calendar-day {
+            background: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+
+        body.dark .time-slot {
+            background: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+
+        body.dark .session-item {
+            border-color: #334155;
+        }
+
+        body.dark .form-group label {
+            color: #e2e8f0;
+        }
+
+        body.dark .form-group input,
+        body.dark .form-group textarea,
+        body.dark .form-group select {
+            background: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+
+        body.dark .nda-content {
+            background: #334155;
+            border-color: #475569;
+        }
+
+        body.dark .nda-checkbox {
+            background: #1e40af20;
+        }
+
+        body.dark .mentor-bio,
+        body.dark .rating-text,
+        body.dark .idea-preview {
+            color: #94a3b8;
+        }
+
+        body.dark .review-item {
+            background: #334155;
+        }
+
+        body.dark .review-text {
+            color: #94a3b8;
+        }
+
+        body.dark .review-author {
+            color: #64748b;
+        }
+
+        body.dark .confirmation-card {
+            background: #1e293b;
+        }
+
+        body.dark .detail-row {
+            border-color: #334155;
+        }
+
+        body.dark .payment-summary {
+            background: #334155;
+        }
+
+        body.dark .next-steps {
+            background: #1e40af20;
+            border-color: #1e40af40;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -0.025em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '';
+            width: 32px;
+            height: 32px;
+            background: #1d4ed8;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='10' y='70' width='15' height='20' fill='%231d4ed8'/%3E%3Crect x='30' y='60' width='15' height='30' fill='%231d4ed8'/%3E%3Crect x='50' y='50' width='15' height='40' fill='%231d4ed8'/%3E%3Cpath d='M20 40 Q40 20 70 35 L85 25 L80 40 L65 35 Q45 25 30 45' fill='%231d4ed8'/%3E%3C/svg%3E") center/contain no-repeat;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='10' y='70' width='15' height='20' fill='%231d4ed8'/%3E%3Crect x='30' y='60' width='15' height='30' fill='%231d4ed8'/%3E%3Crect x='50' y='50' width='15' height='40' fill='%231d4ed8'/%3E%3Cpath d='M20 40 Q40 20 70 35 L85 25 L80 40 L65 35 Q45 25 30 45' fill='%231d4ed8'/%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            margin-left: 1rem;
+        }
+
+        .theme-toggle:hover {
+            border-color: #1d4ed8;
+        }
+
+        body.dark .theme-toggle {
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+
+        body.dark .theme-toggle:hover {
+            border-color: #60a5fa;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #1d4ed8;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #1d4ed8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #d97706;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #1d4ed8;
+            border: 2px solid #1d4ed8;
+        }
+
+        .btn-outline:hover {
+            background: #1d4ed8;
+            color: white;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 80px 0;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-card .icon {
+            background: #dbeafe;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+
+        .benefit-card h3 {
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card p {
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        /* Mentor Cards */
+        .filters {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .mentors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .mentor-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .mentor-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .mentor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #1d4ed8, #f59e0b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .mentor-info h3 {
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .mentor-expertise {
+            color: #1d4ed8;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mentor-rate {
+            color: #f59e0b;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .mentor-type {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .mentor-type.professional {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .mentor-type.senior {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .mentor-type.president {
+            background: #fce7f3;
+            color: #be185d;
+        }
+
+        .mentor-college {
+            color: #64748b;
+            font-size: 0.8rem;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+
+        .mentor-bio {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .mentor-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            color: #fbbf24;
+            font-size: 1rem;
+        }
+
+        .star.empty {
+            color: #d1d5db;
+        }
+
+        .rating-text {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .mentor-reviews {
+            margin-bottom: 1.5rem;
+        }
+
+        .review-item {
+            background: #f8fafc;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #1d4ed8;
+        }
+
+        .review-text {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-style: italic;
+            margin-bottom: 0.25rem;
+        }
+
+        .review-author {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        /* Idea Card Styles */
+        .idea-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .idea-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .idea-card.locked::after {
+            content: '🔒';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+
+        .idea-category {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .idea-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .idea-preview {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .idea-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .idea-price {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        /* NDA Modal Styles */
+        .nda-content {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border: 2px solid #e5e7eb;
+        }
+
+        .nda-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #eff6ff;
+            border-radius: 8px;
+        }
+
+        .nda-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Confirmation Page Styles */
+        .confirmation-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .success-icon {
+            background: #dcfce7;
+            color: #166534;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .payment-summary {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .next-steps {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        /* Booking Page */
+        .booking-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .booking-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .pitch-options {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .pitch-option {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pitch-option:hover, .pitch-option.selected {
+            border-color: #1d4ed8;
+            background: #dbeafe;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calendar-day:hover {
+            background: #eff6ff;
+        }
+
+        .calendar-day.available {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .calendar-day.selected {
+            background: #2563eb;
+            color: white;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .time-slot {
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .time-slot:hover, .time-slot.selected {
+            background: #1d4ed8;
+            color: white;
+        }
+
+        /* Dashboard */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1d4ed8;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .sessions-list {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .session-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .session-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-upcoming {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-content .icon {
+            background: #dcfce7;
+            color: #166534;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .nav-links li:not(:last-child) {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .booking-container {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .logo::before {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .theme-toggle {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">UpStride</div>
+                <ul class="nav-links">
+                    <li><a href="#" onclick="showPage('home')" class="active">Home</a></li>
+                    <li><a href="#" onclick="showPage('mentors')">Pitch Your Idea</a></li>
+                    <li><a href="#" onclick="showPage('idea-marketplace')">Idea Marketplace</a></li>
+                    <li><a href="#" onclick="showPage('my-pitches')">My Pitches</a></li>
+                    <li><button class="theme-toggle" onclick="toggleTheme()">🌙</button></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>Pitch your idea. Get expert feedback.</h1>
+                <p>Connect with experienced evaluators who can help transform your ideas into reality</p>
+                <a href="#" onclick="showPage('mentors')" class="btn btn-secondary">Pitch Your Idea</a>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <div class="container">
+            <div class="benefits">
+                <div class="benefit-card">
+                    <div class="icon">🎯</div>
+                    <h3>Pitch Perfection</h3>
+                    <p>Get detailed feedback on your pitch deck, presentation skills, and idea clarity from industry experts</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">🚀</div>
+                    <h3>Idea Validation</h3>
+                    <p>Validate your business concept with experienced entrepreneurs who understand market dynamics</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">💡</div>
+                    <h3>Strategic Insights</h3>
+                    <p>Receive actionable advice on refining your value proposition and competitive positioning</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="icon">📈</div>
+                    <h3>Investor Ready</h3>
+                    <p>Polish your pitch to investor standards with feedback from those who've secured funding</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mentors Page -->
+    <div id="mentors" class="page">
+        <div class="container">
+            <h2 style="text-align: center; margin: 3rem 0; font-size: 2.5rem; color: #1f2937;">Pitch Your Idea to Experts</h2>
+
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="priceRange">Budget Range</label>
+                        <select id="priceRange" onchange="applyFilters()">
+                            <option value="">All Budgets</option>
+                            <option value="0-300">Under ₹300</option>
+                            <option value="301-600">₹300 - ₹600</option>
+                            <option value="601+">₹600+</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="industry">Your Idea Category</label>
+                        <select id="industry" onchange="applyFilters()">
+                            <option value="">All Categories</option>
+                            <option value="tech">Technology & Apps</option>
+                            <option value="business">Business & Services</option>
+                            <option value="finance">Finance & Fintech</option>
+                            <option value="design">Design & Creative</option>
+                            <option value="marketing">Marketing & Growth</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="searchName">Search Experts</label>
+                        <input type="text" id="searchName" placeholder="Search by name or expertise..." oninput="applyFilters()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mentors Grid -->
+            <div class="mentors-grid" id="mentorsGrid">
+                <!-- Mentor cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Idea Marketplace Page -->
+    <div id="idea-marketplace" class="page">
+        <div class="container">
+            <h2 style="text-align: center; margin: 3rem 0; font-size: 2.5rem; color: #1f2937;">Idea Marketplace</h2>
+            <p style="text-align: center; color: #64748b; margin-bottom: 3rem; font-size: 1.1rem;">Browse innovative ideas, unlock full details, and provide valuable feedback</p>
+            
+            <!-- Post Idea Button -->
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <button class="btn btn-primary" onclick="openPostIdeaModal()">📝 Post Your Idea</button>
+            </div>
+
+            <!-- Ideas Grid -->
+            <div class="mentors-grid" id="ideasGrid">
+                <!-- Idea cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Page -->
+    <div id="booking" class="page">
+        <div class="container">
+            <h2 style="text-align: center; margin: 3rem 0; font-size: 2.5rem; color: #1f2937;">Book Your Pitch Review</h2>
+            
+            <div class="booking-container">
+                <!-- Pitch Options -->
+                <div class="booking-section">
+                    <h3 style="margin-bottom: 1.5rem; color: #1f2937;">Choose Your Pitch Review Method</h3>
+                    
+                    <div class="pitch-options">
+                        <div class="pitch-option" onclick="selectPitchOption('file')">
+                            <h4>📄 Pitch Deck Review</h4>
+                            <p>Upload your pitch deck, business plan, or demo video for detailed feedback</p>
+                            <small style="color: #64748b;">Written feedback within 24-48 hours</small>
+                            <div style="margin-top: 0.5rem; font-weight: bold; color: #f59e0b;">Starting ₹79 per pitch</div>
+                        </div>
+                        <div class="pitch-option" onclick="selectPitchOption('live')">
+                            <h4>🎥 Live Pitch Session</h4>
+                            <p>Present your idea live and get real-time feedback and Q&A</p>
+                            <small style="color: #64748b;">30-60 minute interactive sessions</small>
+                            <div style="margin-top: 0.5rem; font-weight: bold; color: #f59e0b;">₹1,250 per session</div>
+                        </div>
+                    </div>
+
+                    <div id="fileUpload" style="display: none; margin-top: 1rem;">
+                        <input type="file" accept=".ppt,.pptx,.pdf,.mp4,.mov" style="width: 100%; padding: 10px; border: 2px dashed #2563eb; border-radius: 6px;">
+                        <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.5rem;">Accepted formats: PPT, PDF, MP4, MOV (max 50MB)</p>
+                    </div>
+                </div>
+
+                <!-- Calendar & Payment -->
+                <div class="booking-section">
+                    <h3 id="schedulingTitle" style="margin-bottom: 1.5rem; color: #1f2937;">Select Date & Time</h3>
+                    
+                    <div id="calendarSection">
+                        <div class="calendar-grid">
+                            <div class="calendar-day">Mon</div>
+                            <div class="calendar-day">Tue</div>
+                            <div class="calendar-day">Wed</div>
+                            <div class="calendar-day">Thu</div>
+                            <div class="calendar-day">Fri</div>
+                            <div class="calendar-day">Sat</div>
+                            <div class="calendar-day">Sun</div>
+                            <div class="calendar-day">1</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">2</div>
+                            <div class="calendar-day">3</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">4</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">5</div>
+                            <div class="calendar-day">6</div>
+                            <div class="calendar-day">7</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">8</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">9</div>
+                            <div class="calendar-day">10</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">11</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">12</div>
+                            <div class="calendar-day">13</div>
+                            <div class="calendar-day">14</div>
+                        </div>
+
+                        <div class="time-slots" id="timeSlots" style="display: none;">
+                            <div class="time-slot" onclick="selectTime(this)">9:00 AM</div>
+                            <div class="time-slot" onclick="selectTime(this)">10:30 AM</div>
+                            <div class="time-slot" onclick="selectTime(this)">2:00 PM</div>
+                            <div class="time-slot" onclick="selectTime(this)">3:30 PM</div>
+                            <div class="time-slot" onclick="selectTime(this)">5:00 PM</div>
+                        </div>
+                    </div>
+
+                    <div id="fileOnlyMessage" style="display: none; text-align: center; padding: 2rem; background: #f0f9ff; border-radius: 8px; margin-bottom: 2rem;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem;">📄 File Review Selected</h4>
+                        <p style="color: #0369a1;">Upload your pitch file above and you'll receive detailed written feedback within 24-48 hours. No scheduling required!</p>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e7eb;" id="pricingSection">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span>Session Fee:</span>
+                            <span style="font-weight: bold;" id="sessionFee">₹1,250</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span>Platform Fee:</span>
+                            <span id="platformFee">₹125</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem;">
+                            <span>Total:</span>
+                            <span id="totalFee">₹1,375</span>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="processPayment()">Confirm & Pay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Pitches Page -->
+    <div id="my-pitches" class="page">
+        <div class="container">
+            <h2 style="text-align: center; margin: 3rem 0; font-size: 2.5rem; color: #1f2937;">My Pitch Reviews</h2>
+            
+            <!-- Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div>Active Reviews</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div>Total Pitches</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">₹2,450</div>
+                    <div>Total Spent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4.2</div>
+                    <div>Avg Feedback Score</div>
+                </div>
+            </div>
+
+            <!-- Pitches List -->
+            <div class="sessions-list">
+                <div style="padding: 1.5rem; background: #f8fafc; font-weight: 600; color: #374151;">
+                    Your Pitch Reviews & Sessions
+                </div>
+                <div class="session-item">
+                    <div>
+                        <div style="font-weight: 600;">E-commerce Platform Pitch</div>
+                        <div style="color: #64748b; font-size: 0.9rem;">Expert: Sarah Johnson • Live Session</div>
+                        <div style="color: #64748b; font-size: 0.8rem;">Today, 2:00 PM</div>
+                    </div>
+                    <span class="status-badge status-upcoming">Upcoming</span>
+                </div>
+                <div class="session-item">
+                    <div>
+                        <div style="font-weight: 600;">AI Startup Deck v2</div>
+                        <div style="color: #64748b; font-size: 0.9rem;">Expert: Michael Chen • File Review</div>
+                        <div style="color: #64748b; font-size: 0.8rem;">Submitted yesterday • Feedback pending</div>
+                    </div>
+                    <span class="status-badge status-upcoming">In Review</span>
+                </div>
+                <div class="session-item">
+                    <div>
+                        <div style="font-weight: 600;">Fintech App Concept</div>
+                        <div style="color: #64748b; font-size: 0.9rem;">Expert: David Kim • Live Session</div>
+                        <div style="color: #64748b; font-size: 0.8rem;">Dec 15, 3:30 PM • Score: 8.5/10</div>
+                    </div>
+                    <span class="status-badge status-completed">Feedback Received</span>
+                </div>
+                <div class="session-item">
+                    <div>
+                        <div style="font-weight: 600;">SaaS Business Plan</div>
+                        <div style="color: #64748b; font-size: 0.9rem;">Expert: Emily Rodriguez • File Review</div>
+                        <div style="color: #64748b; font-size: 0.8rem;">Dec 12 • Score: 7.2/10 • Cost: ₹199</div>
+                    </div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="showPage('mentors')">Submit New Pitch</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Page -->
+    <div id="confirmation" class="page">
+        <div class="container">
+            <div style="max-width: 600px; margin: 0 auto; padding: 3rem 0;">
+                <!-- Success Icon -->
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="background: #dcfce7; color: #166534; width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 1rem;">✓</div>
+                    <h1 style="color: #166534; margin-bottom: 0.5rem; font-size: 2.5rem;">Booking Confirmed!</h1>
+                    <p style="color: #64748b; font-size: 1.1rem;">Your pitch review session has been successfully booked</p>
+                </div>
+
+                <!-- Booking Summary Card -->
+                <div style="background: white; border-radius: 16px; padding: 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                    <h2 style="color: #1f2937; margin-bottom: 2rem; text-align: center; font-size: 1.5rem;">Pitch Review Summary</h2>
+                    
+                    <!-- Mentor Info -->
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                        <div id="confirmMentorAvatar" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #1d4ed8, #f59e0b); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: 700;"></div>
+                        <div>
+                            <h3 id="confirmMentorName" style="color: #1f2937; margin-bottom: 0.25rem;"></h3>
+                            <div id="confirmMentorExpertise" style="color: #1d4ed8; font-weight: 600; font-size: 0.9rem;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Session Details -->
+                    <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0;">
+                            <span style="color: #64748b; font-weight: 500;">Review Type:</span>
+                            <span id="confirmSessionType" style="font-weight: 600;"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-top: 1px solid #f1f5f9;">
+                            <span style="color: #64748b; font-weight: 500;">Date:</span>
+                            <span id="confirmDate" style="font-weight: 600;"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-top: 1px solid #f1f5f9;">
+                            <span style="color: #64748b; font-weight: 500;">Time:</span>
+                            <span id="confirmTime" style="font-weight: 600;"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-top: 1px solid #f1f5f9;">
+                            <span style="color: #64748b; font-weight: 500;">Duration:</span>
+                            <span id="confirmDuration" style="font-weight: 600;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Summary -->
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                        <h4 style="color: #1f2937; margin-bottom: 1rem;">Payment Summary</h4>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Session Fee:</span>
+                            <span id="confirmSessionFee"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Platform Fee:</span>
+                            <span id="confirmPlatformFee"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; padding-top: 0.5rem; border-top: 1px solid #e5e7eb;">
+                            <span>Total Paid:</span>
+                            <span id="confirmTotal" style="color: #166534;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Next Steps -->
+                    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 1.5rem;">
+                        <h4 style="color: #1e40af; margin-bottom: 1rem;">📋 What's Next?</h4>
+                        <ul style="color: #1e40af; padding-left: 1rem;">
+                            <li style="margin-bottom: 0.5rem;">You'll receive a confirmation email with session details</li>
+                            <li style="margin-bottom: 0.5rem;" id="nextStepInfo">Zoom link will be sent 30 minutes before the session</li>
+                            <li style="margin-bottom: 0.5rem;">Prepare your pitch presentation and key questions for evaluation</li>
+                            <li>You can reschedule up to 24 hours before the session</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button class="btn btn-outline" onclick="showPage('mentors')">Book Another Review</button>
+                    <button class="btn btn-primary" onclick="showPage('home')">Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="icon">✓</div>
+            <h2 style="color: #166534; margin-bottom: 1rem;">Booking Confirmed!</h2>
+            <p style="color: #64748b; margin-bottom: 2rem;">Your pitch review has been booked successfully. You'll receive a confirmation email with all the details.</p>
+            <button class="btn btn-primary" onclick="closeModal()">Continue</button>
+        </div>
+    </div>
+
+    <!-- Post Idea Modal -->
+    <div id="postIdeaModal" class="modal" style="overflow-y: auto;">
+        <div class="modal-content" style="max-width: 700px; text-align: left; max-height: 90vh; overflow-y: auto; margin: 2rem auto;">
+            <h2 style="color: #1f2937; margin-bottom: 1.5rem; text-align: center;">Post Your Idea</h2>
+            
+            <form onsubmit="submitIdea(event)">
+                <div class="form-group">
+                    <label for="ideaTitle">Idea Title *</label>
+                    <input type="text" id="ideaTitle" required maxlength="100" placeholder="Enter a catchy title for your idea">
+                </div>
+
+                <div class="form-group">
+                    <label for="ideaCategory">Category *</label>
+                    <select id="ideaCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="tech">Technology & Apps</option>
+                        <option value="business">Business & Services</option>
+                        <option value="finance">Finance & Fintech</option>
+                        <option value="design">Design & Creative</option>
+                        <option value="marketing">Marketing & Growth</option>
+                        <option value="social">Social Impact</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="education">Education</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ideaBrief">Brief Overview (Public) *</label>
+                    <textarea id="ideaBrief" required maxlength="200" placeholder="Write a teaser that will be visible to everyone..." oninput="updateCharCount('ideaBrief', 200)"></textarea>
+                    <div class="char-count"><span id="ideaBriefCount">0</span>/200</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ideaFull">Full Details (Paid Access) *</label>
+                    <textarea id="ideaFull" required maxlength="2000" placeholder="Describe your idea in detail - problem, solution, target market, business model, etc." style="min-height: 150px;" oninput="updateCharCount('ideaFull', 2000)"></textarea>
+                    <div class="char-count"><span id="ideaFullCount">0</span>/2000</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ideaPrice">Unlock Price (₹) *</label>
+                    <input type="number" id="ideaPrice" required min="49" max="999" value="99" placeholder="49">
+                    <small style="color: #64748b;">Minimum ₹49, Maximum ₹999</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="ideaStage">Development Stage *</label>
+                    <select id="ideaStage" required>
+                        <option value="">Select stage</option>
+                        <option value="concept">Just an Idea/Concept</option>
+                        <option value="research">Market Research Phase</option>
+                        <option value="prototype">Prototype/MVP Ready</option>
+                        <option value="testing">Beta Testing</option>
+                        <option value="launched">Launched</option>
+                    </select>
+                </div>
+
+                <!-- Intellectual Property License Section -->
+                <div class="form-group">
+                    <label for="ideaLicense">Intellectual Property Protection *</label>
+                    <select id="ideaLicense" required onchange="showLicenseInfo()">
+                        <option value="">Select a license/protection type</option>
+                        <option value="cc-by-nc-nd">Creative Commons BY-NC-ND 4.0 (Recommended)</option>
+                        <option value="cc-by-nc">Creative Commons BY-NC 4.0</option>
+                        <option value="proprietary-nda">Proprietary with NDA (All Rights Reserved)</option>
+                        <option value="patent-pending">Patent Pending Status</option>
+                        <option value="trade-secret">Trade Secret Protection</option>
+                        <option value="copyright">Copyright Protection</option>
+                    </select>
+                    <div id="licenseInfo" style="margin-top: 0.75rem; padding: 1rem; background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 6px; display: none;">
+                        <div id="licenseDescription"></div>
+                    </div>
+                </div>
+
+                <!-- IP Protection Notice -->
+                <div style="background: #fef3c7; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #f59e0b;">
+                    <h4 style="color: #92400e; margin-bottom: 0.75rem; font-size: 0.95rem;">🛡️ Your Idea is Protected</h4>
+                    <ul style="color: #92400e; font-size: 0.85rem; padding-left: 1.25rem; margin: 0;">
+                        <li style="margin-bottom: 0.5rem;">All viewers must accept a legally binding NDA before accessing full details</li>
+                        <li style="margin-bottom: 0.5rem;">Your selected license provides additional legal protection</li>
+                        <li style="margin-bottom: 0.5rem;">Timestamp and digital signature recorded for proof of ownership</li>
+                        <li style="margin-bottom: 0.5rem;">Violation reporting system available if idea theft occurs</li>
+                        <li>Platform maintains audit trail of all access and downloads</li>
+                    </ul>
+                </div>
+
+                <!-- Terms Acceptance -->
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 2px solid #e5e7eb;">
+                    <label style="display: flex; align-items: start; gap: 0.75rem; cursor: pointer; margin: 0;">
+                        <input type="checkbox" id="agreeTerms" required style="margin-top: 0.25rem; width: 18px; height: 18px; cursor: pointer;">
+                        <span style="font-size: 0.9rem; color: #374151;">
+                            I confirm that I am the original creator of this idea and have the right to share it. I understand that this platform provides protective measures but I should also pursue appropriate legal protection (patents, trademarks, copyrights) for valuable intellectual property. *
+                        </span>
+                    </label>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-outline" onclick="closePostIdeaModal()" style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">🔒 Post Protected Idea</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- NDA Modal -->
+    <div id="ndaModal" class="modal">
+        <div class="modal-content" style="max-width: 700px; text-align: left;">
+            <h2 style="color: #1f2937; margin-bottom: 1rem; text-align: center;">Non-Disclosure Agreement</h2>
+            <p style="text-align: center; color: #64748b; margin-bottom: 1.5rem;">Please read and accept the terms before viewing this idea</p>
+            
+            <div class="nda-content">
+                <h3 style="color: #1e293b; margin-bottom: 1rem;">Confidentiality and Non-Disclosure Terms</h3>
+                
+                <p style="margin-bottom: 1rem;"><strong>1. Confidential Information</strong><br>
+                By accessing this idea, you acknowledge that all information disclosed is confidential and proprietary to the idea creator.</p>
+                
+                <p style="margin-bottom: 1rem;"><strong>2. Non-Disclosure Obligation</strong><br>
+                You agree not to disclose, reproduce, share, or distribute any part of this idea to any third party without explicit written permission from the creator.</p>
+                
+                <p style="margin-bottom: 1rem;"><strong>3. Non-Compete Clause</strong><br>
+                <span style="background: #fef3c7; padding: 2px 6px; border-radius: 4px; font-weight: 600;">You explicitly agree NOT to copy, replicate, or implement this idea for your own commercial benefit or any purpose whatsoever.</span> This includes creating similar products, services, or business models based on this idea.</p>
+                
+                <p style="margin-bottom: 1rem;"><strong>4. Feedback Purpose Only</strong><br>
+                Access to this idea is granted solely for the purpose of providing constructive feedback to the creator. You may not use this information for any other purpose.</p>
+                
+                <p style="margin-bottom: 1rem;"><strong>5. Legal Consequences</strong><br>
+                Violation of this agreement may result in legal action and you may be held liable for damages, including but not limited to financial losses and legal fees.</p>
+                
+                <p style="margin-bottom: 1rem;"><strong>6. Duration</strong><br>
+                This agreement remains in effect indefinitely, even after you have provided feedback or your interaction with the creator has ended.</p>
+                
+                <p style="margin-bottom: 1rem;"><strong>7. Jurisdiction</strong><br>
+                This agreement shall be governed by the laws of India. Any disputes arising from this agreement shall be subject to the exclusive jurisdiction of courts in Bangalore, Karnataka.</p>
+                
+                <p style="margin-bottom: 0;"><strong>8. Acknowledgment</strong><br>
+                By checking the box below, you confirm that you have read, understood, and agree to be legally bound by all terms of this Non-Disclosure Agreement.</p>
+            </div>
+
+            <div class="nda-checkbox">
+                <input type="checkbox" id="ndaAccept" onchange="toggleNdaButton()">
+                <label for="ndaAccept" style="margin: 0; cursor: pointer; font-weight: 600; color: #1e40af;">
+                    I have read and agree to the Non-Disclosure Agreement. I will NOT copy or implement this idea.
+                </label>
+            </div>
+
+            <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #f59e0b;">
+                <strong style="color: #92400e;">⚠️ Important:</strong>
+                <p style="color: #92400e; margin: 0.5rem 0 0 0; font-size: 0.9rem;">This is a legally binding agreement. By proceeding, you acknowledge that copying or implementing this idea without permission may result in legal action.</p>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" class="btn btn-outline" onclick="closeNdaModal()" style="flex: 1;">Decline & Go Back</button>
+                <button type="button" class="btn btn-primary" id="ndaAcceptBtn" onclick="acceptNdaAndPay()" style="flex: 1;" disabled>Accept & Proceed to Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Idea Details Modal -->
+    <div id="ideaDetailsModal" class="modal">
+        <div class="modal-content" style="max-width: 700px; text-align: left;">
+            <h2 id="detailIdeaTitle" style="color: #1f2937; margin-bottom: 1rem;"></h2>
+            <div id="detailIdeaCategory" style="margin-bottom: 1rem;"></div>
+            
+            <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <h3 style="color: #1e293b; margin-bottom: 1rem;">Full Idea Details</h3>
+                <p id="detailIdeaFull" style="color: #374151; line-height: 1.6; white-space: pre-wrap;"></p>
+            </div>
+
+            <div style="background: #eff6ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <h3 style="color: #1e40af; margin-bottom: 1rem;">💬 Provide Your Feedback</h3>
+                <textarea id="feedbackText" placeholder="Share your thoughts, suggestions, and constructive feedback..." style="width: 100%; min-height: 120px; padding: 12px; border: 2px solid #bfdbfe; border-radius: 8px; font-family: inherit;"></textarea>
+                <button class="btn btn-primary" onclick="submitFeedback()" style="margin-top: 1rem; width: 100%;">Submit Feedback</button>
+            </div>
+
+            <button type="button" class="btn btn-outline" onclick="closeIdeaDetailsModal()" style="width: 100%;">Close</button>
+        </div>
+    </div>
+    
+
+   <div> <form id="mentorSignup" style="max-width:400px; margin:2rem auto;">
+  <h3><b>Mentor Onboardings</b></h3>
+
+  <input id="mentorName" placeholder="Name" required />
+  <input id="mentorEmail" type="email" placeholder="Email" required />
+  <input id="mentorExpertise" placeholder="Expertise" required />
+
+  <select id="mentorPitchType">
+    <option value="call">Live Call</option>
+    <option value="deck">Deck Review</option>
+    <option value="feedback">Written Feedback</option>
+  </select>
+
+  <button type="submit">Join as Mentor</button>
+</form></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3"></script>
+
+<script>
+  const SUPABASE_URL = "https://qxrbjkxuynytijlajmty.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4cmJqa3h1eW55dGlqbGFqbXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgwNjkwMDksImV4cCI6MjA4MzY0NTAwOX0.V7zHHQYe50M2OQUCW9KwrE37I3isPIvpXPeMm0xKdi8";
+
+  const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+</script>
+
+
+
+    
+<script>
+  // Mentor signup → Supabase insert
+  document.addEventListener("DOMContentLoaded", () => {
+  document
+    .getElementById("mentorSignup")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+      // insert code
+    
+
+
+
+    const name = document.getElementById("mentorName").value;
+    const email = document.getElementById("mentorEmail").value;
+    const expertise = document.getElementById("mentorExpertise").value;
+    const pitch_type = document.getElementById("mentorPitchType").value;
+
+    console.log("Submitting mentor:", name, email);
+
+    const { data, error } = await supabase.from("mentors")
+.insert([
+        { name: name, email: email, expertise: expertise, pitch_type: pitch_type }
+      ]);
+
+    if (error) {
+      console.error("Supabase error:", error);
+        alert(error.message);
+    } else {
+      console.log("Insert success:", data);
+      alert("Mentor onboarded successfully!");
+      e.target.reset();
+    }
+  });
+  });
+</script>
+
+
+
+
+
+    <script>
+        // Sample ideas data
+        const ideas = [
+            {
+                id: 1,
+                title: "AI-Powered College Notes Sharing Platform",
+                category: "tech",
+                categoryName: "Technology & Apps",
+                brief: "A platform where students can share and access high-quality college notes, automatically organized by subject and semester with AI verification...",
+                fullDetails: `Problem: Students waste countless hours creating notes or struggle to find quality study materials during exams.
+
+Solution: An AI-powered platform that:
+- Allows students to upload and share notes
+- Uses AI to verify quality and accuracy
+- Organizes content by college, subject, and semester
+- Rewards contributors with credits
+- Offers premium curated notes by toppers
+
+Target Market: 50M+ college students in India
+Business Model: Freemium (basic access free, premium notes ₹99/month)
+Competitive Advantage: AI quality verification, gamification for contributors
+Monetization: Subscriptions, college partnerships, advertising
+
+Stage: Prototype ready, 500 beta users
+Funding Needed: ₹15L for development and marketing`,
+                price: 99,
+                stage: "prototype",
+                views: 234,
+                unlocks: 12,
+                postedBy: "Rahul M.",
+                postedDate: "2 days ago"
+            },
+            {
+                id: 2,
+                title: "Hyperlocal Tiffin Service Aggregator",
+                category: "business",
+                categoryName: "Business & Services",
+                brief: "Connect home chefs and small tiffin services with working professionals and students through a hyperlocal delivery platform...",
+                fullDetails: `Problem: Working professionals and students struggle to find affordable, homely, and healthy meal options. Home chefs lack a platform to reach customers.
+
+Solution: A hyperlocal app that:
+- Connects verified home chefs with customers within 3km radius
+- Offers monthly subscription plans for daily meals
+- Quality checks and ratings system
+- Flexible meal plans (breakfast/lunch/dinner)
+- Direct connection between chef and customer
+
+Target Market: 10M+ working professionals in tier 1 cities
+Business Model: 15% commission on subscriptions
+USP: Home-cooked food quality at tiffin prices, reliable monthly subscriptions
+Market Size: ₹500Cr+ addressable market in top 8 cities
+
+Current Status: 50 home chefs onboarded in Bangalore, 200 active subscribers
+Monthly Revenue: ₹80,000
+Funding Ask: ₹25L for expansion to 3 more cities`,
+                price: 149,
+                stage: "launched",
+                views: 456,
+                unlocks: 28,
+                postedBy: "Priya S.",
+                postedDate: "5 days ago"
+            },
+            {
+                id: 3,
+                title: "Campus Event Discovery & Ticketing App",
+                category: "tech",
+                categoryName: "Technology & Apps",
+                brief: "One-stop platform for discovering and booking tickets to all college festivals, technical events, and cultural programs across India...",
+                fullDetails: `Problem: Students miss out on exciting events happening in nearby colleges. Event organizers struggle with marketing and ticketing.
+
+Solution: Mobile app that:
+- Lists all upcoming college events in your city
+- Easy ticket booking and QR code entry
+- Social features to find friends attending
+- College fest rankings and reviews
+- Event organizer dashboard for management
+
+Target Audience: 15M+ college students interested in inter-college events
+Revenue Streams:
+1. Ticketing commission (10%)
+2. Featured listings for colleges (₹5000/event)
+3. Sponsor connections (15% commission)
+
+Differentiation: Focus only on college events, strong social features
+Competition: BookMyShow (too broad), Insider (expensive)
+
+Traction: Beta launched in Bangalore and Pune, 2000+ users
+Next Steps: Expand to Delhi, Mumbai, Chennai, raise seed funding`,
+                price: 79,
+                stage: "testing",
+                views: 189,
+                unlocks: 8,
+                postedBy: "Amit K.",
+                postedDate: "1 week ago"
+            },
+            {
+                id: 4,
+                title: "Sustainable Fashion Rental Marketplace",
+                category: "business",
+                categoryName: "Business & Services",
+                brief: "Rent designer and branded clothes for special occasions at 10% of retail price. Reduce fashion waste while looking great...",
+                fullDetails: `Problem: 
+- People buy expensive clothes for single occasions
+- Fast fashion creates massive environmental waste
+- Students/young professionals want branded wear but can't afford
+
+Solution: Online rental marketplace where users can:
+- Rent designer outfits for 3-7 days at 10-15% retail price
+- List their own branded clothes for rental
+- Professional cleaning and quality assurance
+- Try before you buy option
+- Sustainable fashion choice
+
+Market Opportunity: ₹1000Cr+ sustainable fashion market growing at 35% CAGR
+Target Users: Women 18-35, tier 1 cities, occasions: weddings, parties, interviews
+
+Business Model:
+- 30% commission on rentals
+- Cleaning service charges
+- Styling consultation fees
+- Insurance on high-value items
+
+Current Status: 500 outfits listed, 120 active users in Bangalore
+Customer Acquisition: Instagram influencer partnerships
+Funding Need: ₹20L for inventory and 2 more city launches`,
+                price: 129,
+                stage: "testing",
+                views: 312,
+                unlocks: 19,
+                postedBy: "Sneha R.",
+                postedDate: "3 days ago"
+            },
+            {
+                id: 5,
+                title: "Mental Health Support Platform for Students",
+                category: "health",
+                categoryName: "Health & Wellness",
+                brief: "Anonymous peer support and affordable counseling for college students struggling with stress, anxiety, and mental health issues...",
+                fullDetails: `Problem: 1 in 3 students face mental health issues but don't seek help due to stigma and cost. Campus counseling has limited availability.
+
+Solution: Digital platform offering:
+- Anonymous peer support groups by college/issue
+- Affordable video counseling (₹199/session vs ₹2000 market rate)
+- AI-powered mood tracking and wellness tips
+- Emergency helpline integration
+- Resource library for self-help
+
+Why Now: Post-pandemic mental health awareness at all-time high
+Target: 30M+ college students in India
+Social Impact: Democratize mental health support
+
+Business Model:
+- Freemium (community free, counseling paid)
+- College partnerships (bulk sessions)
+- Corporate wellness programs
+
+Competitive Edge: Student-focused, affordable, anonymous
+Team: 2 psychology grads + 1 tech developer
+Validation: 1000+ beta users, 4.8 app rating
+
+Funding: ₹10L for licensed counselors and marketing`,
+                price: 149,
+                stage: "testing",
+                views: 267,
+                unlocks: 15,
+                postedBy: "Kavya T.",
+                postedDate: "4 days ago"
+            },
+            {
+                id: 6,
+                title: "Smart Hostel Mess Management System",
+                category: "tech",
+                categoryName: "Technology & Apps",
+                brief: "Digital platform to revolutionize hostel mess operations - menu voting, food waste tracking, complaint management, and billing...",
+                fullDetails: `Problem: Hostel mess food quality and management is a constant issue. No student feedback loop, high wastage, billing errors.
+
+Solution: SaaS platform for hostels providing:
+- Students vote on weekly menu in advance
+- Real-time feedback and ratings for each meal
+- Food waste analytics to optimize quantities
+- Automated billing and attendance tracking
+- Nutrition tracking for students
+- Mess management dashboard
+
+Target Market: 5000+ engineering college hostels, 50L+ hostel students
+B2B SaaS Model: ₹5000-15000/month per hostel based on size
+
+Value Proposition:
+- Colleges: Reduce complaints by 60%, cut waste by 40%
+- Students: Better food, voice in menu selection
+- Mess contractors: Data-driven operations
+
+Competitive Landscape: No direct competitor in India
+Technology: Web + mobile app, cloud-based
+Traction: 5 hostel pilots running, positive feedback
+
+Go-to-Market: Target tier 2-3 college hostels first (less competition)
+Funding: ₹18L for sales team and tech infrastructure`,
+                price: 99,
+                stage: "prototype",
+                views: 178,
+                unlocks: 9,
+                postedBy: "Arjun V.",
+                postedDate: "6 days ago"
+            }
+        ];
+
+        // Track unlocked ideas per session
+        let unlockedIdeas = new Set();
+
+        // Sample mentor data
+        const mentors = [
+            // Industry Professionals
+            {
+                name: "Zama Arsh",
+                expertise: "Tech Startups",
+                experience: "10-15",
+                industry: "tech",
+                liveRate: 1199,
+                fileRate: 299,
+                bio: "Former VP at Google, helped launch 3 successful startups. Specialized in product strategy and scaling teams.",
+                avatar: "ZA",
+                type: "professional",
+                rating: 4.9,
+                reviewCount: 127,
+                reviews: [
+                    { text: "Sarah's pitch feedback transformed my startup presentation completely. Her insights were spot-on!", author: "Rahul M." },
+                    { text: "Incredible session! She helped me identify key market gaps I hadn't considered in my pitch.", author: "Priya S." }
+                ]
+            },
+            {
+                name: "Anfal",
+                expertise: "AI & Machine Learning",
+                experience: "15+",
+                industry: "tech",
+                liveRate: 1199,
+                fileRate: 299,
+                bio: "AI researcher turned entrepreneur. Built and sold 2 AI companies. Expert in technical product development.",
+                avatar: "AN",
+                type: "professional",
+                rating: 4.8,
+                reviewCount: 89,
+                reviews: [
+                    { text: "Michael's technical depth helped me strengthen my AI product pitch significantly.", author: "Amit K." },
+                    { text: "Great feedback for deep tech pitches. Very practical advice on communicating complex concepts.", author: "Neha R." }
+                ]
+            },
+            {
+                name: "R Keerthana",
+                expertise: "Digital Marketing",
+                experience: "5-10",
+                industry: "marketing",
+                liveRate: 1199,
+                fileRate: 299,
+                bio: "Growth marketing expert who scaled 5 startups from 0 to $10M+ ARR. Specializes in user acquisition.",
+                avatar: "RK",
+                type: "professional",
+                rating: 4.9,
+                reviewCount: 156,
+                reviews: [
+                    { text: "Emily's growth strategies transformed how I presented my user acquisition model!", author: "Karan T." },
+                    { text: "She knows exactly how to position products for maximum market impact in pitches.", author: "Sneha P." }
+                ]
+            },
+            {
+                name: "Shihaam",
+                expertise: "Fintech & Banking",
+                experience: "15+",
+                industry: "finance",
+                liveRate: 1199,
+                fileRate: 299,
+                bio: "Former Goldman Sachs MD, now fintech investor. Deep expertise in financial products and regulations.",
+                avatar: "SH",
+                type: "professional",
+                rating: 4.7,
+                reviewCount: 73,
+                reviews: [
+                    { text: "David's fintech expertise helped me address regulatory concerns in my pitch.", author: "Vikram A." },
+                    { text: "Excellent insights on financial product pitching and investor expectations.", author: "Anjali M." }
+                ]
+            },
+            {
+                name: "Girik Gagwani",
+                expertise: "UX/UI Design",
+                experience: "5-10",
+                industry: "design",
+                liveRate: 1199,
+                fileRate: 299,
+                bio: "Design lead at Airbnb, created award-winning user experiences. Passionate about design thinking.",
+                avatar: "GG",
+                type: "professional",
+                rating: 4.9,
+                reviewCount: 142,
+                reviews: [
+                    { text: "Lisa helped me visualize my app concept much better in my pitch deck!", author: "Rohan G." },
+                    { text: "Her design thinking approach improved my product demonstration significantly.", author: "Divya L." }
+                ]
+            },
+            {
+                name: "Ayush",
+                expertise: "E-commerce",
+                experience: "10-15",
+                industry: "tech",
+                liveRate: 1199,
+                fileRate: 299,
+                bio: "Built and sold 3 e-commerce companies. Expert in marketplace dynamics and customer experience.",
+                avatar: "AY",
+                type: "professional",
+                rating: 4.8,
+                reviewCount: 98,
+                reviews: [
+                    { text: "Robert's e-commerce insights made my marketplace pitch much more compelling.", author: "Shreya B." },
+                    { text: "Great feedback on customer acquisition and retention strategies for my pitch.", author: "Arjun V." }
+                ]
+            },
+            
+            // College Seniors
+            {
+                name: "Arjun Sharma",
+                expertise: "Campus Startups",
+                experience: "Student",
+                industry: "tech",
+                liveRate: 400,
+                fileRate: 119,
+                bio: "IIT Delhi Final Year, Co-founder of campus food delivery startup. Won multiple hackathons and pitch competitions.",
+                avatar: "AS",
+                type: "senior",
+                college: "IIT Delhi",
+                rating: 4.6,
+                reviewCount: 45,
+                reviews: [
+                    { text: "Arjun knows what works in student pitch competitions. Great practical advice!", author: "Ravi M." },
+                    { text: "His startup experience really shows. Helped me avoid common pitch mistakes.", author: "Pooja K." }
+                ]
+            },
+            {
+                name: "Priya Patel",
+                expertise: "Product Management",
+                experience: "Student",
+                industry: "tech",
+                liveRate: 350,
+                fileRate: 89,
+                bio: "NIT Surat, Product Manager Intern at Flipkart. Built 3 successful college projects, mentored 20+ juniors.",
+                avatar: "PP",
+                type: "senior",
+                college: "NIT Surat",
+                rating: 4.7,
+                reviewCount: 38,
+                reviews: [
+                    { text: "Priya's product insights made my pitch much more compelling. She knows what works!", author: "Manish S." },
+                    { text: "Great feedback for communicating product-market fit in pitches. Very relatable!", author: "Kavya R." }
+                ]
+            },
+            {
+                name: "Rohit Kumar",
+                expertise: "Tech & Innovation",
+                experience: "Student",
+                industry: "tech",
+                liveRate: 300,
+                fileRate: 79,
+                bio: "BITS Pilani Senior, Google Summer of Code participant. Founded college tech society, organized 10+ workshops.",
+                avatar: "RK",
+                type: "senior",
+                college: "BITS Pilani",
+                rating: 4.5,
+                reviewCount: 32,
+                reviews: [
+                    { text: "Rohit's technical guidance helped me explain my MVP better in my pitch.", author: "Sanjay L." },
+                    { text: "Very approachable and explains how to pitch complex tech concepts clearly.", author: "Meera T." }
+                ]
+            },
+            
+            // Club Presidents
+            {
+                name: "Ananya Singh",
+                expertise: "Entrepreneurship Club",
+                experience: "Student Leader",
+                industry: "business",
+                liveRate: 250,
+                fileRate: 79,
+                bio: "President, Entrepreneurship Cell, IIM Bangalore. Organized startup weekend, connected 100+ students with VCs.",
+                avatar: "ANS",
+                type: "president",
+                college: "IIM Bangalore",
+                position: "E-Cell President",
+                rating: 4.8,
+                reviewCount: 67,
+                reviews: [
+                    { text: "Ananya's business acumen helped me structure my pitch for maximum impact!", author: "Deepak N." },
+                    { text: "She helped me create a winning business model pitch. Very knowledgeable!", author: "Rashmi P." }
+                ]
+            },
+            {
+                name: "Vikash Agarwal",
+                expertise: "Business Strategy",
+                experience: "Student Leader",
+                industry: "business",
+                liveRate: 200,
+                fileRate: 79,
+                bio: "President, Business Club, SRCC Delhi. Led team that won national B-plan competition, mentored 50+ pitches.",
+                avatar: "VA",
+                type: "president",
+                college: "SRCC Delhi",
+                position: "Business Club President",
+                rating: 4.6,
+                reviewCount: 41,
+                reviews: [
+                    { text: "Vikash knows how to win pitch competitions. His tips were game-changing!", author: "Nidhi G." },
+                    { text: "Excellent guidance on presentation skills and business pitch strategy.", author: "Karthik M." }
+                ]
+            },
+            {
+                name: "Sneha Reddy",
+                expertise: "Innovation & Design",
+                experience: "Student Leader",
+                industry: "design",
+                liveRate: 300,
+                fileRate: 79,
+                bio: "President, Design Thinking Club, NID Ahmedabad. Won multiple design challenges, conducted 15+ workshops.",
+                avatar: "SR",
+                type: "president",
+                college: "NID Ahmedabad",
+                position: "Design Club President",
+                rating: 4.7,
+                reviewCount: 29,
+                reviews: [
+                    { text: "Sneha's design thinking approach completely changed how I pitch my solutions!", author: "Aditya J." },
+                    { text: "Creative and insightful feedback on making pitches more engaging and visual.", author: "Tanvi S." }
+                ]
+            }
+        ];
+
+        // Theme toggle functionality
+        let isDarkMode = false;
+        
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            isDarkMode = !isDarkMode;
+            
+            if (isDarkMode) {
+                body.classList.add('dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                body.classList.remove('dark');
+                themeToggle.textContent = '🌙';
+            }
+        }
+
+        function initializeTheme() {
+            const themeToggle = document.querySelector('.theme-toggle');
+            themeToggle.textContent = '🌙';
+        }
+
+        // Generate star rating HTML
+        function generateStars(rating) {
+            let starsHtml = '<div class="stars">';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    starsHtml += '<span class="star">★</span>';
+                } else if (i - 0.5 <= rating) {
+                    starsHtml += '<span class="star">☆</span>';
+                } else {
+                    starsHtml += '<span class="star empty">☆</span>';
+                }
+            }
+            starsHtml += '</div>';
+            return starsHtml;
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            renderMentors(mentors);
+            renderIdeas(ideas);
+        });
+
+        // Filter functionality
+        function applyFilters() {
+            const priceRange = document.getElementById('priceRange').value;
+            const industry = document.getElementById('industry').value;
+            const searchName = document.getElementById('searchName').value.toLowerCase();
+
+            let filteredMentors = mentors.filter(mentor => {
+                if (priceRange) {
+                    const price = mentor.liveRate;
+                    if (priceRange === '0-300' && price > 300) return false;
+                    if (priceRange === '301-600' && (price <= 300 || price > 600)) return false;
+                    if (priceRange === '601+' && price <= 600) return false;
+                }
+
+                if (industry && mentor.industry !== industry) return false;
+
+                if (searchName && !mentor.name.toLowerCase().includes(searchName) && !mentor.expertise.toLowerCase().includes(searchName)) return false;
+
+                return true;
+            });
+
+            renderMentors(filteredMentors);
+        }
+
+        // Navigation
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            if (['home', 'mentors', 'my-pitches', 'idea-marketplace'].includes(pageId)) {
+                const navLinks = document.querySelectorAll('.nav-links a');
+                navLinks.forEach(link => link.classList.remove('active'));
+                
+                const targetLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+                if (targetLink) {
+                    targetLink.classList.add('active');
+                }
+            }
+        }
+
+        // Render mentors
+        function renderMentors(mentorsToRender) {
+            const grid = document.getElementById('mentorsGrid');
+            grid.innerHTML = '';
+            
+            if (mentorsToRender.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #64748b;"><h3>No pitch experts found</h3><p>Try adjusting your filters to see more results.</p></div>';
+                return;
+            }
+            
+            mentorsToRender.forEach(mentor => {
+                const typeLabel = mentor.type === 'professional' ? 'Industry Pro' : 
+                                mentor.type === 'senior' ? 'College Senior' : 'Club President';
+                const collegeInfo = mentor.college ? `<div class="mentor-college">${mentor.college}${mentor.position ? ' • ' + mentor.position : ''}</div>` : '';
+                
+                const reviewsHtml = mentor.reviews.map(review => 
+                    `<div class="review-item">
+                        <div class="review-text">"${review.text}"</div>
+                        <div class="review-author">- ${review.author}</div>
+                    </div>`
+                ).join('');
+                
+                const mentorCard = `
+                    <div class="mentor-card">
+                        <div class="mentor-avatar">${mentor.avatar}</div>
+                        <div class="mentor-info">
+                            <div class="mentor-type ${mentor.type}">${typeLabel}</div>
+                            <h3>${mentor.name}</h3>
+                            <div class="mentor-expertise">${mentor.expertise}</div>
+                            ${collegeInfo}
+                            <div class="mentor-rating">
+                                ${generateStars(mentor.rating)}
+                                <span class="rating-text">${mentor.rating} (${mentor.reviewCount} reviews)</span>
+                            </div>
+                            <div class="mentor-rate">
+                                <div style="margin-bottom: 0.25rem;">Live Pitch Review: ₹${mentor.liveRate}</div>
+                                <div style="font-size: 0.9rem; color: #64748b;">File Review: ₹${mentor.fileRate}</div>
+                            </div>
+                            <div class="mentor-bio">${mentor.bio}</div>
+                            <div class="mentor-reviews">
+                                ${reviewsHtml}
+                            </div>
+                            <button class="btn btn-primary" onclick="selectMentor('${mentor.name}', ${mentor.liveRate}, ${mentor.fileRate})">Pitch to ${mentor.name.split(' ')[0]}</button>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += mentorCard;
+            });
+        }
+
+        // Render ideas
+        function renderIdeas(ideasToRender) {
+            const grid = document.getElementById('ideasGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            if (ideasToRender.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #64748b;"><h3>No ideas found</h3><p>Be the first to post an idea!</p></div>';
+                return;
+            }
+            
+            ideasToRender.forEach(idea => {
+                const isUnlocked = unlockedIdeas.has(idea.id);
+                const lockedClass = isUnlocked ? '' : 'locked';
+                
+                const licenseBadge = idea.license ? `<div style="background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; display: inline-block; margin-top: 0.5rem;">🛡️ ${idea.licenseName || 'Protected'}</div>` : '';
+                
+                const ideaCard = `
+                    <div class="idea-card ${lockedClass}">
+                        <div class="idea-category">${idea.categoryName}</div>
+                        <h3 class="idea-title">${idea.title}</h3>
+                        <div class="idea-preview">${idea.brief}</div>
+                        ${licenseBadge}
+                        
+                        <div class="idea-stats">
+                            <span>👁️ ${idea.views} views</span>
+                            <span>🔓 ${idea.unlocks} unlocked</span>
+                            <span>📅 ${idea.postedDate}</span>
+                        </div>
+                        
+                        ${!isUnlocked ? `
+                            <div class="idea-price">Unlock full details for ₹${idea.price}</div>
+                            <button class="btn btn-primary" onclick="openNdaModal(${idea.id})" style="width: 100%;">
+                                🔒 Unlock & View Details
+                            </button>
+                        ` : `
+                            <div style="background: #dcfce7; color: #166534; padding: 8px; border-radius: 6px; text-align: center; margin-bottom: 1rem; font-weight: 600;">
+                                ✓ Unlocked
+                            </div>
+                            <button class="btn btn-primary" onclick="viewIdeaDetails(${idea.id})" style="width: 100%;">
+                                View Full Details
+                            </button>
+                        `}
+                        
+                        <div style="margin-top: 0.75rem; font-size: 0.8rem; color: #64748b; text-align: center;">
+                            Posted by ${idea.postedBy} • ${idea.stage}
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += ideaCard;
+            });
+        }
+
+        // Post Idea Modal Functions
+        function openPostIdeaModal() {
+            document.getElementById('postIdeaModal').classList.add('active');
+        }
+
+        function closePostIdeaModal() {
+            document.getElementById('postIdeaModal').classList.remove('active');
+            document.querySelector('#postIdeaModal form').reset();
+            document.getElementById('ideaBriefCount').textContent = '0';
+            document.getElementById('ideaFullCount').textContent = '0';
+            document.getElementById('licenseInfo').style.display = 'none';
+        }
+
+        function updateCharCount(fieldId, maxLength) {
+            const field = document.getElementById(fieldId);
+            const countSpan = document.getElementById(fieldId + 'Count');
+            countSpan.textContent = field.value.length;
+            
+            if (field.value.length >= maxLength) {
+                countSpan.style.color = '#dc2626';
+            } else {
+                countSpan.style.color = '#64748b';
+            }
+        }
+
+        function showLicenseInfo() {
+            const license = document.getElementById('ideaLicense').value;
+            const licenseInfo = document.getElementById('licenseInfo');
+            const licenseDescription = document.getElementById('licenseDescription');
+            
+            const licenses = {
+                'cc-by-nc-nd': {
+                    name: 'Creative Commons Attribution-NonCommercial-NoDerivatives 4.0',
+                    description: '<strong>Recommended for Ideas</strong><br/>✅ <strong>You retain full ownership</strong><br/>✅ Others can view but cannot use commercially<br/>✅ No modifications or derivatives allowed<br/>✅ They must credit you as the creator<br/>✅ Free, globally recognized legal framework<br/>🌐 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color: #2563eb;">Learn more</a>',
+                    color: '#166534'
+                },
+                'cc-by-nc': {
+                    name: 'Creative Commons Attribution-NonCommercial 4.0',
+                    description: '<strong>Allows Adaptations (Non-Commercial)</strong><br/>✅ You retain ownership<br/>✅ Others can adapt but not use commercially<br/>✅ They must credit you<br/>⚠️ Derivatives are allowed (with attribution)<br/>🌐 <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" style="color: #2563eb;">Learn more</a>',
+                    color: '#1e40af'
+                },
+                'proprietary-nda': {
+                    name: 'Proprietary - All Rights Reserved with NDA',
+                    description: '<strong>Maximum Protection</strong><br/>✅ Full copyright protection<br/>✅ All rights reserved to you<br/>✅ NDA required for all viewers<br/>✅ No usage allowed without explicit permission<br/>⚖️ Strongest legal protection available',
+                    color: '#be185d'
+                },
+                'patent-pending': {
+                    name: 'Patent Pending Status',
+                    description: '<strong>For Patentable Inventions</strong><br/>⚠️ <strong>You must have filed a patent application</strong><br/>✅ Provides legal notice of pending patent<br/>✅ Deters copying during review period<br/>📋 Patent application number required<br/>⚖️ Consult a patent attorney',
+                    color: '#92400e'
+                },
+                'trade-secret': {
+                    name: 'Trade Secret Protection',
+                    description: '<strong>Confidential Business Information</strong><br/>✅ Information kept strictly confidential<br/>✅ NDA protects disclosure<br/>✅ No registration required<br/>⚠️ Protection lost if publicly disclosed<br/>⚖️ Common for formulas, processes, methods',
+                    color: '#065f46'
+                },
+                'copyright': {
+                    name: 'Copyright Protection',
+                    description: '<strong>For Creative Works</strong><br/>✅ Automatic upon creation<br/>✅ Protects original expression of ideas<br/>✅ Covers written content, designs, code<br/>⚠️ Doesn\'t protect the underlying idea itself<br/>📋 Can register for additional legal benefits',
+                    color: '#7c2d12'
+                }
+            };
+            
+            if (license && licenses[license]) {
+                const info = licenses[license];
+                licenseDescription.innerHTML = `
+                    <h4 style="color: ${info.color}; margin-bottom: 0.75rem; font-size: 0.95rem;">${info.name}</h4>
+                    <div style="font-size: 0.85rem; line-height: 1.6; color: #374151;">${info.description}</div>
+                `;
+                licenseInfo.style.display = 'block';
+            } else {
+                licenseInfo.style.display = 'none';
+            }
+        }
+
+        function submitIdea(event) {
+            event.preventDefault();
+            
+            const selectedLicense = document.getElementById('ideaLicense').value;
+            const licenseName = document.getElementById('ideaLicense').options[document.getElementById('ideaLicense').selectedIndex].text;
+            
+            const newIdea = {
+                id: ideas.length + 1,
+                title: document.getElementById('ideaTitle').value,
+                category: document.getElementById('ideaCategory').value,
+                categoryName: document.getElementById('ideaCategory').options[document.getElementById('ideaCategory').selectedIndex].text,
+                brief: document.getElementById('ideaBrief').value,
+                fullDetails: document.getElementById('ideaFull').value,
+                price: parseInt(document.getElementById('ideaPrice').value),
+                stage: document.getElementById('ideaStage').value,
+                license: selectedLicense,
+                licenseName: licenseName,
+                timestamp: new Date().toISOString(),
+                views: 0,
+                unlocks: 0,
+                postedBy: "You",
+                postedDate: "Just now"
+            };
+            
+            ideas.unshift(newIdea);
+            renderIdeas(ideas);
+            closePostIdeaModal();
+            
+            alert('🎉 Your idea has been posted successfully with IP protection!\n\n📋 License: ' + licenseName + '\n🔒 Protected by NDA\n⏰ Timestamp: ' + new Date().toLocaleString() + '\n\nYour idea is now live in the marketplace with legal protection.');
+            showPage('idea-marketplace');
+        }
+
+        // NDA Modal Functions
+        let currentIdeaId = null;
+
+        function openNdaModal(ideaId) {
+            currentIdeaId = ideaId;
+            document.getElementById('ndaModal').classList.add('active');
+            document.getElementById('ndaAccept').checked = false;
+            document.getElementById('ndaAcceptBtn').disabled = true;
+        }
+
+        function closeNdaModal() {
+            document.getElementById('ndaModal').classList.remove('active');
+            currentIdeaId = null;
+        }
+
+        function toggleNdaButton() {
+            const checkbox = document.getElementById('ndaAccept');
+            const button = document.getElementById('ndaAcceptBtn');
+            button.disabled = !checkbox.checked;
+        }
+
+        function acceptNdaAndPay() {
+            if (!currentIdeaId) return;
+            
+            const idea = ideas.find(i => i.id === currentIdeaId);
+            if (!idea) return;
+            
+            const confirmed = confirm(`Proceed to pay ₹${idea.price} to unlock "${idea.title}"?\n\nYou are agreeing to the NDA terms.`);
+            
+            if (confirmed) {
+                unlockedIdeas.add(currentIdeaId);
+                idea.unlocks += 1;
+                
+                closeNdaModal();
+                renderIdeas(ideas);
+                
+                setTimeout(() => {
+                    alert('✅ Payment successful! You can now view the full details.');
+                    viewIdeaDetails(currentIdeaId);
+                }, 300);
+            }
+        }
+
+        // View Idea Details
+        function viewIdeaDetails(ideaId) {
+            const idea = ideas.find(i => i.id === ideaId);
+            if (!idea) return;
+            
+            if (!unlockedIdeas.has(ideaId)) {
+                alert('Please unlock this idea first to view full details.');
+                return;
+            }
+            
+            idea.views += 1;
+            
+            const licenseBadge = idea.license ? `<div style="background: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-block; margin-bottom: 1rem;">🛡️ Protected under: ${idea.licenseName || 'License'}</div>` : '';
+            
+            document.getElementById('detailIdeaTitle').textContent = idea.title;
+            document.getElementById('detailIdeaCategory').innerHTML = `<span class="idea-category">${idea.categoryName}</span>${licenseBadge}`;
+            document.getElementById('detailIdeaFull').textContent = idea.fullDetails;
+            document.getElementById('feedbackText').value = '';
+            
+            window.currentViewingIdea = ideaId;
+            
+            document.getElementById('ideaDetailsModal').classList.add('active');
+        }
+
+        function closeIdeaDetailsModal() {
+            document.getElementById('ideaDetailsModal').classList.remove('active');
+            window.currentViewingIdea = null;
+        }
+
+        function submitFeedback() {
+            const feedback = document.getElementById('feedbackText').value.trim();
+            
+            if (!feedback) {
+                alert('Please write some feedback before submitting.');
+                return;
+            }
+            
+            if (feedback.length < 20) {
+                alert('Please provide more detailed feedback (at least 20 characters).');
+                return;
+            }
+            
+            alert('✅ Thank you for your feedback! The idea creator will receive your insights.');
+            document.getElementById('feedbackText').value = '';
+            closeIdeaDetailsModal();
+            
+            renderIdeas(ideas);
+        }
+
+        // Select mentor and go to booking
+        function selectMentor(mentorName, liveRate, fileRate) {
+            window.selectedMentor = {name: mentorName, liveRate: liveRate, fileRate: fileRate};
+            showPage('booking');
+            updatePricing(liveRate);
+        }
+
+        // Pitch option selection
+        let selectedPitchMethod = null;
+        function selectPitchOption(method) {
+            selectedPitchMethod = method;
+            
+            document.querySelectorAll('.pitch-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.closest('.pitch-option').classList.add('selected');
+            
+            const fileUpload = document.getElementById('fileUpload');
+            const calendarSection = document.getElementById('calendarSection');
+            const fileOnlyMessage = document.getElementById('fileOnlyMessage');
+            const schedulingTitle = document.getElementById('schedulingTitle');
+            
+            if (method === 'file') {
+                fileUpload.style.display = 'block';
+                calendarSection.style.display = 'none';
+                fileOnlyMessage.style.display = 'block';
+                schedulingTitle.textContent = 'Review Details';
+                
+                if (window.selectedMentor) {
+                    updatePricing(window.selectedMentor.fileRate);
+                }
+            } else {
+                fileUpload.style.display = 'none';
+                calendarSection.style.display = 'block';
+                fileOnlyMessage.style.display = 'none';
+                schedulingTitle.textContent = 'Select Date & Time';
+                
+                if (window.selectedMentor) {
+                    updatePricing(window.selectedMentor.liveRate);
+                }
+            }
+        }
+
+        function updatePricing(rate) {
+            const platformFee = Math.round(rate * 0.1);
+            const total = rate + platformFee;
+            
+            document.getElementById('sessionFee').textContent = `₹${rate}`;
+            document.getElementById('platformFee').textContent = `₹${platformFee}`;
+            document.getElementById('totalFee').textContent = `₹${total}`;
+        }
+
+        // Calendar functions
+        function selectDate(element) {
+            document.querySelectorAll('.calendar-day').forEach(day => {
+                day.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            document.getElementById('timeSlots').style.display = 'grid';
+        }
+
+        function selectTime(element) {
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+        }
+
+        // Payment processing
+        function processPayment() {
+            const selectedDate = document.querySelector('.calendar-day.selected');
+            const selectedTime = document.querySelector('.time-slot.selected');
+            
+            if (selectedPitchMethod === 'live') {
+                if (!selectedDate || !selectedTime || !selectedPitchMethod || !window.selectedMentor) {
+                    alert('Please complete all booking details before proceeding.');
+                    return;
+                }
+            } else if (selectedPitchMethod === 'file') {
+                if (!selectedPitchMethod || !window.selectedMentor) {
+                    alert('Please select a pitch review method and upload your file before proceeding.');
+                    return;
+                }
+            } else {
+                alert('Please select a pitch review method before proceeding.');
+                return;
+            }
+
+            window.bookingDetails = {
+                mentor: window.selectedMentor,
+                date: selectedDate ? selectedDate.textContent : 'N/A',
+                time: selectedTime ? selectedTime.textContent : 'N/A',
+                sessionType: selectedPitchMethod,
+                sessionFee: document.getElementById('sessionFee').textContent,
+                platformFee: document.getElementById('platformFee').textContent,
+                total: document.getElementById('totalFee').textContent
+            };
+
+            showConfirmationPage();
+        }
+
+        // Show confirmation page
+        function showConfirmationPage() {
+            const details = window.bookingDetails;
+            const mentor = mentors.find(m => m.name === details.mentor.name);
+            
+            document.getElementById('confirmMentorAvatar').textContent = mentor.avatar;
+            document.getElementById('confirmMentorName').textContent = mentor.name;
+            document.getElementById('confirmMentorExpertise').textContent = mentor.expertise;
+            
+            document.getElementById('confirmSessionType').textContent = 
+                details.sessionType === 'live' ? '🎥 Live Pitch Session' : '📄 Pitch Deck Review';
+            
+            if (details.sessionType === 'live') {
+                document.getElementById('confirmDate').textContent = `September ${details.date}, 2025`;
+                document.getElementById('confirmTime').textContent = details.time;
+                document.getElementById('confirmDuration').textContent = '45-60 minutes';
+            } else {
+                document.getElementById('confirmDate').textContent = 'Asynchronous Review';
+                document.getElementById('confirmTime').textContent = 'No specific time';
+                document.getElementById('confirmDuration').textContent = '24-48 hours turnaround';
+            }
+            
+            document.getElementById('confirmSessionFee').textContent = details.sessionFee;
+            document.getElementById('confirmPlatformFee').textContent = details.platformFee;
+            document.getElementById('confirmTotal').textContent = details.total;
+            
+            const nextStepInfo = document.getElementById('nextStepInfo');
+            if (details.sessionType === 'live') {
+                nextStepInfo.textContent = 'Zoom link will be sent 30 minutes before the pitch session';
+            } else {
+                nextStepInfo.textContent = 'Upload your pitch files and receive detailed feedback within 24-48 hours';
+            }
+            
+            showPage('confirmation');
+        }
+        
+  
+
+    
+  
+
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('active');
+            showPage('confirmation');
+        }
+
+        // Initialize
+        function init() {
+            console.log('UpStride pitch platform initialized');
+        }
+
+        init();
+        
+
+        
+    </script>
+    </body>
+
+</html>

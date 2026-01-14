@@ -937,6 +937,10 @@
     🎓 Become a Mentor
   </button>
 </div>
+<button class="btn btn-outline" onclick="openAuthModal()">
+  🔐 Sign In / Sign Up
+</button>
+
 
 
                     <li><button class="theme-toggle" onclick="toggleTheme()">🌙</button></li>
@@ -1071,7 +1075,7 @@
                     </div>
 
                     <div id="fileUpload" style="display: none; margin-top: 1rem;">
-                        <input type="file" accept=".ppt,.pptx,.pdf,.mp4,.mov" style="width: 100%; padding: 10px; border: 2px dashed #2563eb; border-radius: 6px;">
+                        <input type="file" id="pitchFile" accept=".ppt,.pptx,.pdf,.mp4,.mov" style="width: 100%; padding: 10px; border: 2px dashed #2563eb; border-radius: 6px;">
                         <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.5rem;">Accepted formats: PPT, PDF, MP4, MOV (max 50MB)</p>
                     </div>
                 </div>
@@ -1543,6 +1547,37 @@
 
   </div>
 </div>
+<div id="authModal" class="modal">
+  <div class="modal-content" style="max-width:420px; text-align:left;">
+
+    <h2 style="text-align:center; margin-bottom:1rem;">Welcome to UpStride</h2>
+
+    <form id="authForm">
+      <div class="form-group">
+        <label>Email</label>
+        <input id="authEmail" type="email" required />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input id="authPassword" type="password" required />
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;">
+        Continue
+      </button>
+    </form>
+
+    <p style="font-size:0.85rem; color:#64748b; margin-top:1rem;">
+      New users will be signed up automatically.
+    </p>
+
+    <button class="btn btn-outline" onclick="closeAuthModal()" style="width:100%; margin-top:0.75rem;">
+      Cancel
+    </button>
+
+  </div>
+</div>
 
 
 
@@ -1560,7 +1595,66 @@
 
 
 
-    
+    <script>
+  function openAuthModal() {
+    document.getElementById("authModal").classList.add("active");
+  }
+
+  function closeAuthModal() {
+    document.getElementById("authModal").classList.remove("active");
+  }
+</script>
+
+<script>
+  document.getElementById("authForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("authEmail").value;
+    const password = document.getElementById("authPassword").value;
+
+    // 1️⃣ Try login
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      // 2️⃣ If login fails → signup
+      const { error: signupError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (signupError) {
+        alert(signupError.message);
+        return;
+      }
+
+      alert("Account created & logged in!");
+    } else {
+      alert("Logged in successfully!");
+    }
+
+    closeAuthModal();
+    updateAuthState();
+  });
+</script>
+<script>
+  async function updateAuthState() {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+      console.log("User logged in:", user.id, user.email);
+      window.currentUser = user;
+    } else {
+      window.currentUser = null;
+    }
+  }
+
+  // Run on page load
+  updateAuthState();
+</script>
+
 <script>
   // Mentor signup → Supabase insert
   document.addEventListener("DOMContentLoaded", () => {
@@ -1599,25 +1693,52 @@
 </script>
 
 <script>
-async function uploadPitchFile(file, pitchType) {
-  const fileExt = file.name.split('.').pop();
+// async function uploadPitchFile(file, pitchType) {
+//   const fileExt = file.name.split('.').pop();
+//   const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
+//   const filePath = `${pitchType}/${fileName}`;
+
+//   const { error: uploadError } = await supabase.storage
+//     .from('pitch_uploads')
+//     .upload(filePath, file);
+
+//   if (uploadError) {
+//     throw uploadError;
+//   }
+
+//   const { data } = supabase.storage
+//     .from('pitch_uploads')
+//     .getPublicUrl(filePath);
+
+//   return data.publicUrl;
+// }
+
+async function uploadPitchFile() {
+  const fileInput = document.getElementById("pitchFile");
+  const file = fileInput.files[0];
+
+  if (!file) return null;
+
+  const fileExt = file.name.split(".").pop();
   const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
-  const filePath = `${pitchType}/${fileName}`;
 
-  const { error: uploadError } = await supabase.storage
-    .from('pitch_uploads')
-    .upload(filePath, file);
+  const { data, error } = await supabase.storage
+    .from("pitch-files")
+    .upload(fileName, file);
 
-  if (uploadError) {
-    throw uploadError;
+  if (error) {
+    console.error(error);
+    alert("File upload failed");
+    return null;
   }
 
-  const { data } = supabase.storage
-    .from('pitch_uploads')
-    .getPublicUrl(filePath);
+  const { data: publicUrlData } = supabase.storage
+    .from("pitch-files")
+    .getPublicUrl(fileName);
 
-  return data.publicUrl;
+  return publicUrlData.publicUrl;
 }
+
 </script>
 
 
@@ -2529,6 +2650,44 @@ Funding: ₹18L for sales team and tech infrastructure`,
 
         // Payment processing
         function processPayment() {
+            
+            async function uploadPitchFile() {
+  const fileInput = document.getElementById("pitchFile");
+  if (!fileInput || fileInput.files.length === 0) {
+    return null; // no file uploaded
+  }
+
+  const file = fileInput.files[0];
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
+
+  const { data, error } = await supabase.storage
+    .from("pitch_files")
+    .upload(fileName, file);
+
+  if (error) {
+    alert("File upload failed");
+    console.error(error);
+    return null;
+  }
+
+  const { data: urlData } = supabase.storage
+    .from("pitch_files")
+    .getPublicUrl(fileName);
+
+  return urlData.publicUrl;
+}
+
+            if (!window.currentUser) {
+  alert("Please sign in to book a session");
+  openAuthModal();
+  return;
+}
+
+
+
+            
+
             const selectedDate = document.querySelector('.calendar-day.selected');
             const selectedTime = document.querySelector('.time-slot.selected');
             
@@ -2546,6 +2705,7 @@ Funding: ₹18L for sales team and tech infrastructure`,
                 alert('Please select a pitch review method before proceeding.');
                 return;
             }
+            
 
             window.bookingDetails = {
                 mentor: window.selectedMentor,
@@ -2557,32 +2717,91 @@ Funding: ₹18L for sales team and tech infrastructure`,
                 total: document.getElementById('totalFee').textContent
             };
             // 🔐 Store booking in Supabase (PAID from day 1)
-(async () => {
-  const selectedDate = document.querySelector('.calendar-day.selected');
-  const selectedTime = document.querySelector('.time-slot.selected');
+// (async () => {
+//   const selectedDate = document.querySelector('.calendar-day.selected');
+//   const selectedTime = document.querySelector('.time-slot.selected');
 
-  const { error } = await supabase.from("bookings").insert([
-    {
-      mentor_name: window.selectedMentor.name,
-      mentor_expertise: window.selectedMentor.expertise || "",
-      pitch_type: selectedPitchMethod,
-      session_date: selectedDate ? selectedDate.textContent : "N/A",
-      session_time: selectedTime ? selectedTime.textContent : "N/A",
-      session_fee: document.getElementById("sessionFee").textContent,
-      platform_fee: document.getElementById("platformFee").textContent,
-      total_paid: document.getElementById("totalFee").textContent,
-      payment_status: "paid",
-      booking_status: "booked"
-    }
-  ]);
+//   const { error } = await supabase.from("bookings").insert([
+//     {
+//       mentor_name: window.selectedMentor.name,
+//       mentor_expertise: window.selectedMentor.expertise || "",
+//       pitch_type: selectedPitchMethod,
+//       session_date: selectedDate ? selectedDate.textContent : "N/A",
+//       session_time: selectedTime ? selectedTime.textContent : "N/A",
+//       session_fee: document.getElementById("sessionFee").textContent,
+//       platform_fee: document.getElementById("platformFee").textContent,
+//       total_paid: document.getElementById("totalFee").textContent,
+//       payment_status: "paid",
+//       booking_status: "booked"
+//     }
+//   ]);
+
+//   if (error) {
+//     console.error("Booking insert failed:", error);
+//     alert("Payment successful, but booking save failed. Please contact support.");
+//   }
+// })();
+
+
+async function saveBooking(details) {
+  const user = window.currentUser;
+
+  if (!user) {
+    alert("Please sign in first");
+    return;
+  }
+
+  const { error } = await supabase
+    .from("finalbookings")
+    .insert([{
+      user_id: user.id,
+      user_email: user.email,
+
+      mentor_name: details.mentor,
+      pitch_type: details.pitchType,
+
+      file_url: details.fileUrl || null,
+
+      session_date: details.date || null,
+      session_time: details.time || null,
+
+      amount_paid: details.amount
+    }]);
 
   if (error) {
-    console.error("Booking insert failed:", error);
-    alert("Payment successful, but booking save failed. Please contact support.");
+    console.error(error);
+    alert("Booking failed");
+  } else {
+    console.log("Booking saved");
   }
-})();
+  let fileUrl = null;
+
+if (selectedPitchMethod === "file") {
+  fileUrl = await uploadPitchFile();
+
+  if (!fileUrl) {
+    alert("Please upload your pitch file");
+    return;
+  }
+
+  window.uploadedFileUrl = fileUrl;
+}
+
+}
 
 
+
+
+saveBooking({
+  mentor: window.selectedMentor.name,
+  pitchType: selectedPitchMethod,
+  fileUrl: window.uploadedFileUrl || null,
+  date: selectedPitchMethod === "live" ? selectedDate.textContent : null,
+  time: selectedPitchMethod === "live" ? selectedTime.textContent : null,
+  amount: parseInt(
+    document.getElementById("totalFee").textContent.replace("₹","")
+  )
+});
 
 
             showConfirmationPage();

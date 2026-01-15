@@ -930,7 +930,7 @@
                     <li><a href="#" onclick="showPage('home')" class="active">Home</a></li>
                     <li><a href="#" onclick="showPage('mentors')">Pitch Your Idea</a></li>
                     <li><a href="#" onclick="showPage('idea-marketplace')">Idea Marketplace</a></li>
-                    <li><a href="#" onclick="showPage('my-pitches')">My Pitches</a></li>
+                    <!-- <li><a href="#" onclick="showPage('my-pitches')">My Pitches</a></li> -->
                     <div> <!-- //style="text-align:center; margin:3rem 0; -->
                          
   <button class="btn btn-primary" onclick="openMentorModal()">
@@ -1036,6 +1036,7 @@
         <div class="container">
             <h2 style="text-align: center; margin: 3rem 0; font-size: 2.5rem; color: #1f2937;">Idea Marketplace</h2>
             <p style="text-align: center; color: #64748b; margin-bottom: 3rem; font-size: 1.1rem;">Browse innovative ideas, unlock full details, and provide valuable feedback</p>
+            <p style="text-align: center; color: #64748b; margin-bottom: 3rem; font-size: 1.1rem;"><b></b>COMING SOON</b></p>
             
             <!-- Post Idea Button -->
             <div style="text-align: center; margin-bottom: 3rem;">
@@ -1075,7 +1076,11 @@
                     </div>
 
                     <div id="fileUpload" style="display: none; margin-top: 1rem;">
-                        <input type="file" id="pitchFile" accept=".ppt,.pptx,.pdf,.mp4,.mov" style="width: 100%; padding: 10px; border: 2px dashed #2563eb; border-radius: 6px;">
+                        <input type="url" id="pitchDriveUrl" placeholder="Paste Google Drive link (view access required)" style="width:100%; padding:10px; border:2px dashed #2563eb; border-radius:6px;" required>
+<p style="color:#64748b; font-size:0.9rem; margin-top:0.5rem;">
+  Make sure access is set to <b>Anyone with link → View</b>
+</p>
+
                         <p style="color: #64748b; font-size: 0.9rem; margin-top: 0.5rem;">Accepted formats: PPT, PDF, MP4, MOV (max 50MB)</p>
                     </div>
                 </div>
@@ -1136,7 +1141,10 @@
                             <span>Total:</span>
                             <span id="totalFee">₹1,375</span>
                         </div>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="processPayment()">Confirm & Pay</button>
+                        <button class="btn btn-primary" onclick="processPayment()">
+  Confirm & Get Payment Details
+</button>
+
                     </div>
                 </div>
             </div>
@@ -1212,6 +1220,43 @@
             </div>
         </div>
     </div>
+    <!-- Payment Page -->
+<div id="payment" class="page">
+  <div class="container">
+    <div style="max-width:420px;margin:3rem auto;text-align:center;">
+
+      <h1>💸 Complete Payment</h1>
+      <p style="color:#64748b;margin-bottom:1rem;">
+        Scan & pay using GPay / PhonePe / Paytm
+      </p>
+
+      <!-- QR IMAGE -->
+      <img 
+        src="qr_img.png"
+        alt="GPay QR"
+        style="width:260px;border-radius:12px;margin:1.5rem 0;"
+      />
+
+      <h3>Amount: <span id="payAmount"></span></h3>
+
+      <p style="font-size:0.9rem;color:#64748b;margin:1rem 0;">
+        After payment, click the button below.
+      </p>
+
+      <button class="btn btn-primary" onclick="confirmManualPayment()">
+        ✅ I’ve Paid
+      </button>
+
+      <br><br>
+
+      <button class="btn btn-outline" onclick="showPage('booking')">
+        ⬅ Go Back
+      </button>
+
+    </div>
+  </div>
+</div>
+
 
     <!-- Confirmation Page -->
     <div id="confirmation" class="page">
@@ -1577,6 +1622,19 @@
     </button>
 
   </div>
+  <!-- UPI Payment Modal -->
+<div id="upiModal" class="modal">
+  <div class="modal-content" style="max-width:420px; text-align:left;">
+
+    <h2 style="text-align:center;">💸 Complete Payment</h2>
+
+    <p style="color:#64748b; font-size:0.95rem; margin-bottom:1rem;">
+      Pay via UPI to confirm your booking.
+    </p>
+
+    <div style="background:#f8fafc; padding:1rem; border-radius:8px; margin-bottom:1rem;">
+      <b>Amount:</b> <span id="upiAmount"></span><br>
+
 </div>
 
 
@@ -1593,6 +1651,11 @@
   );
 </script>
 
+<script>
+  function isValidDriveUrl(url) {
+    return url.includes("drive.google.com");
+  }
+</script>
 
 
     <script>
@@ -1604,6 +1667,7 @@
     document.getElementById("authModal").classList.remove("active");
   }
 </script>
+
 
 <script>
   document.getElementById("authForm").addEventListener("submit", async (e) => {
@@ -2649,199 +2713,188 @@ Funding: ₹18L for sales team and tech infrastructure`,
         }
 
         // Payment processing
-        function processPayment() {
-            
-            async function uploadPitchFile() {
-  const fileInput = document.getElementById("pitchFile");
-  if (!fileInput || fileInput.files.length === 0) {
-    return null; // no file uploaded
-  }
+       async function processPayment() {
 
-  const file = fileInput.files[0];
-  const fileExt = file.name.split('.').pop();
-  const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
-
-  const { data, error } = await supabase.storage
-    .from("pitch_files")
-    .upload(fileName, file);
-
-  if (error) {
-    alert("File upload failed");
-    console.error(error);
-    return null;
-  }
-
-  const { data: urlData } = supabase.storage
-    .from("pitch_files")
-    .getPublicUrl(fileName);
-
-  return urlData.publicUrl;
-}
-
-            if (!window.currentUser) {
-  alert("Please sign in to book a session");
-  openAuthModal();
-  return;
-}
-
-
-
-            
-
-            const selectedDate = document.querySelector('.calendar-day.selected');
-            const selectedTime = document.querySelector('.time-slot.selected');
-            
-            if (selectedPitchMethod === 'live') {
-                if (!selectedDate || !selectedTime || !selectedPitchMethod || !window.selectedMentor) {
-                    alert('Please complete all booking details before proceeding.');
-                    return;
-                }
-            } else if (selectedPitchMethod === 'file') {
-                if (!selectedPitchMethod || !window.selectedMentor) {
-                    alert('Please select a pitch review method and upload your file before proceeding.');
-                    return;
-                }
-            } else {
-                alert('Please select a pitch review method before proceeding.');
-                return;
-            }
-            
-
-            window.bookingDetails = {
-                mentor: window.selectedMentor,
-                date: selectedDate ? selectedDate.textContent : 'N/A',
-                time: selectedTime ? selectedTime.textContent : 'N/A',
-                sessionType: selectedPitchMethod,
-                sessionFee: document.getElementById('sessionFee').textContent,
-                platformFee: document.getElementById('platformFee').textContent,
-                total: document.getElementById('totalFee').textContent
-            };
-            // 🔐 Store booking in Supabase (PAID from day 1)
-// (async () => {
-//   const selectedDate = document.querySelector('.calendar-day.selected');
-//   const selectedTime = document.querySelector('.time-slot.selected');
-
-//   const { error } = await supabase.from("bookings").insert([
-//     {
-//       mentor_name: window.selectedMentor.name,
-//       mentor_expertise: window.selectedMentor.expertise || "",
-//       pitch_type: selectedPitchMethod,
-//       session_date: selectedDate ? selectedDate.textContent : "N/A",
-//       session_time: selectedTime ? selectedTime.textContent : "N/A",
-//       session_fee: document.getElementById("sessionFee").textContent,
-//       platform_fee: document.getElementById("platformFee").textContent,
-//       total_paid: document.getElementById("totalFee").textContent,
-//       payment_status: "paid",
-//       booking_status: "booked"
-//     }
-//   ]);
-
-//   if (error) {
-//     console.error("Booking insert failed:", error);
-//     alert("Payment successful, but booking save failed. Please contact support.");
-//   }
-// })();
-
-
-async function saveBooking(details) {
-  const user = window.currentUser;
-
-  if (!user) {
-    alert("Please sign in first");
+  if (!window.currentUser) {
+    alert("Please sign in to continue");
+    openAuthModal();
     return;
   }
 
-  const { error } = await supabase
-    .from("finalbookings")
-    .insert([{
-      user_id: user.id,
-      user_email: user.email,
+  const selectedDate = document.querySelector(".calendar-day.selected");
+  const selectedTime = document.querySelector(".time-slot.selected");
 
-      mentor_name: details.mentor,
-      pitch_type: details.pitchType,
-
-      file_url: details.fileUrl || null,
-
-      session_date: details.date || null,
-      session_time: details.time || null,
-
-      amount_paid: details.amount
-    }]);
-
-  if (error) {
-    console.error(error);
-    alert("Booking failed");
-  } else {
-    console.log("Booking saved");
-  }
-  let fileUrl = null;
-
-if (selectedPitchMethod === "file") {
-  fileUrl = await uploadPitchFile();
-
-  if (!fileUrl) {
-    alert("Please upload your pitch file");
+  if (!window.selectedMentor || !selectedPitchMethod) {
+    alert("Please select a mentor and pitch type");
     return;
   }
 
-  window.uploadedFileUrl = fileUrl;
-}
+  if (selectedPitchMethod === "live") {
+    if (!selectedDate || !selectedTime) {
+      alert("Please select date and time");
+      return;
+    }
+  }
 
-}
+  let driveUrl = null;
+  if (selectedPitchMethod === "file") {
+    const input = document.getElementById("pitchDriveUrl");
+    driveUrl = input.value.trim();
 
+    if (!driveUrl || !isValidDriveUrl(driveUrl)) {
+      alert("Please paste a valid Google Drive link");
+      return;
+    }
+  }
 
+  // ✅ THIS WAS MISSING
+  window.bookingDetails = {
+    mentor: window.selectedMentor.name,
+    pitchType: selectedPitchMethod,
+    fileUrl: driveUrl,
+    date: selectedPitchMethod === "live" ? selectedDate.textContent : null,
+    time: selectedPitchMethod === "live" ? selectedTime.textContent : null,
+    amount: document.getElementById("totalFee").textContent
+  };
 
+  // save to Supabase
+  await saveBooking({
+    mentor: window.selectedMentor.name,
+    pitchType: selectedPitchMethod,
+    fileUrl: driveUrl,
+    date: window.bookingDetails.date,
+    time: window.bookingDetails.time,
+    amount: parseInt(
+      document.getElementById("totalFee").textContent.replace("₹","")
+    )
+  });
 
-saveBooking({
+  // ✅ NOW navigate
+//   showConfirmationPage();
+// Store booking for later
+window.bookingDetails = {
   mentor: window.selectedMentor.name,
   pitchType: selectedPitchMethod,
-  fileUrl: window.uploadedFileUrl || null,
+  fileUrl: driveUrl,
   date: selectedPitchMethod === "live" ? selectedDate.textContent : null,
   time: selectedPitchMethod === "live" ? selectedTime.textContent : null,
-  amount: parseInt(
-    document.getElementById("totalFee").textContent.replace("₹","")
-  )
-});
+  amount: document.getElementById("totalFee").textContent
+};
+
+// show payment page
+document.getElementById("payAmount").textContent =
+  window.bookingDetails.amount;
+
+showPage("payment");
+
+}
 
 
-            showConfirmationPage();
-        }
+        
+// saveBooking({
+//   mentor: window.selectedMentor.name,
+//   pitchType: selectedPitchMethod,
+//   fileUrl: driveUrl, // 🔑 Drive link goes here
+//   date: selectedPitchMethod === "live" ? selectedDate.textContent : null,
+//   time: selectedPitchMethod === "live" ? selectedTime.textContent : null,
+//   amount: parseInt(
+//     document.getElementById("totalFee").textContent.replace("₹","")
+//   )
+// });
+
+
+//             showConfirmationPage();
+//         }
 
         // Show confirmation page
         function showConfirmationPage() {
-            const details = window.bookingDetails;
-            const mentor = mentors.find(m => m.name === details.mentor.name);
+  const details = window.bookingDetails;
+
+  if (!details) {
+    console.error("No booking details found");
+    return;
+  }
+
+  // mentor name is a STRING
+  const mentorName = details.mentor;
+
+  // find mentor object safely
+  const mentor = mentors.find(m => m.name === mentorName);
+
+  // fallback handling
+  document.getElementById("confirmMentorName").textContent = mentorName;
+  document.getElementById("confirmMentorAvatar").textContent =
+    mentor ? mentor.avatar : mentorName[0];
+  document.getElementById("confirmMentorExpertise").textContent =
+    mentor ? mentor.expertise : "";
+
+  document.getElementById("confirmSessionType").textContent =
+    details.pitchType === "live"
+      ? "🎥 Live Pitch Session"
+      : "📄 Pitch Deck Review";
+
+  document.getElementById("confirmDate").textContent =
+    details.pitchType === "live" ? details.date : "Asynchronous";
+
+  document.getElementById("confirmTime").textContent =
+    details.pitchType === "live" ? details.time : "—";
+
+  document.getElementById("confirmDuration").textContent =
+    details.pitchType === "live" ? "45–60 minutes" : "24–48 hours";
+
+  document.getElementById("confirmSessionFee").textContent =
+    document.getElementById("sessionFee").textContent;
+
+  document.getElementById("confirmPlatformFee").textContent =
+    document.getElementById("platformFee").textContent;
+
+  document.getElementById("confirmTotal").textContent =
+    document.getElementById("totalFee").textContent;
+
+  showPage("confirmation");
+}
+
+//         function showConfirmationPage() {
+//             const details = window.bookingDetails;
+
+  
+//             const mentor = mentors.find(m => m.name === details.mentor);
+//             if (!mentor) {
+//   console.warn("Mentor not found, using fallback");
+// }
+
+
             
-            document.getElementById('confirmMentorAvatar').textContent = mentor.avatar;
-            document.getElementById('confirmMentorName').textContent = mentor.name;
-            document.getElementById('confirmMentorExpertise').textContent = mentor.expertise;
+//             document.getElementById('confirmMentorAvatar').textContent = mentor.avatar;
+//             document.getElementById('confirmMentorName').textContent = mentor.name;
+//             document.getElementById('confirmMentorExpertise').textContent = mentor.expertise;
             
-            document.getElementById('confirmSessionType').textContent = 
-                details.sessionType === 'live' ? '🎥 Live Pitch Session' : '📄 Pitch Deck Review';
+//             document.getElementById('confirmSessionType').textContent = 
+//                 details.sessionType === 'live' ? '🎥 Live Pitch Session' : '📄 Pitch Deck Review';
             
-            if (details.sessionType === 'live') {
-                document.getElementById('confirmDate').textContent = `September ${details.date}, 2025`;
-                document.getElementById('confirmTime').textContent = details.time;
-                document.getElementById('confirmDuration').textContent = '45-60 minutes';
-            } else {
-                document.getElementById('confirmDate').textContent = 'Asynchronous Review';
-                document.getElementById('confirmTime').textContent = 'No specific time';
-                document.getElementById('confirmDuration').textContent = '24-48 hours turnaround';
-            }
+//             if (details.sessionType === 'live') {
+//                 document.getElementById('confirmDate').textContent = `September ${details.date}, 2025`;
+//                 document.getElementById('confirmTime').textContent = details.time;
+//                 document.getElementById('confirmDuration').textContent = '45-60 minutes';
+//             } else {
+//                 document.getElementById('confirmDate').textContent = 'Asynchronous Review';
+//                 document.getElementById('confirmTime').textContent = 'No specific time';
+//                 document.getElementById('confirmDuration').textContent = '24-48 hours turnaround';
+//             }
             
-            document.getElementById('confirmSessionFee').textContent = details.sessionFee;
-            document.getElementById('confirmPlatformFee').textContent = details.platformFee;
-            document.getElementById('confirmTotal').textContent = details.total;
+//             document.getElementById('confirmSessionFee').textContent = details.sessionFee;
+//             document.getElementById('confirmPlatformFee').textContent = details.platformFee;
+//             document.getElementById('confirmTotal').textContent = details.total;
             
-            const nextStepInfo = document.getElementById('nextStepInfo');
-            if (details.sessionType === 'live') {
-                nextStepInfo.textContent = 'Zoom link will be sent 30 minutes before the pitch session';
-            } else {
-                nextStepInfo.textContent = 'Upload your pitch files and receive detailed feedback within 24-48 hours';
-            }
+//             const nextStepInfo = document.getElementById('nextStepInfo');
+//             if (details.sessionType === 'live') {
+//                 nextStepInfo.textContent = 'Zoom link will be sent 30 minutes before the pitch session';
+//             } else {
+//                 nextStepInfo.textContent = 'Upload your pitch files and receive detailed feedback within 24-48 hours';
+//             }
             
-            showPage('confirmation');
-        }
+//             showPage('confirmation');
+//         }
         
   
 
@@ -2862,6 +2915,78 @@ saveBooking({
 
         init();
         
+// ===============================
+// UPI MANUAL PAYMENT HANDLERS
+// ===============================
+
+async function submitPaymentProof() {
+  if (!window.pendingBooking) {
+    alert("No pending booking found");
+    return;
+  }
+
+  await saveBooking(window.pendingBooking);
+
+  document.getElementById("upiModal").classList.remove("active");
+  showConfirmationPage();
+}
+
+function closeUpiModal() {
+  document.getElementById("upiModal").classList.remove("active");
+}
+
+async function saveBooking(details) {
+  const user = window.currentUser;
+
+  if (!user) {
+    alert("Please sign in first");
+    return;
+  }
+
+  console.log("Saving booking:", details);
+
+  const { error } = await supabase
+    .from("finalbookings")
+    .insert([{
+  user_id: user.id,
+  user_email: user.email,
+  mentor_name: details.mentor,
+  pitch_type: details.pitchType,
+  file_url: details.fileUrl,
+  session_date: details.date,
+  session_time: details.time,
+  amount_paid: details.amount
+}]);
+
+
+  if (error) {
+    console.error("Save booking error:", error);
+    alert("Booking save failed");
+  } else {
+    
+    console.log("Booking saved successfully");
+  }
+}
+async function confirmManualPayment() {
+
+  if (!window.bookingDetails) {
+    alert("No booking found");
+    return;
+  }
+
+  await saveBooking({
+    mentor: window.bookingDetails.mentor,
+    pitchType: window.bookingDetails.pitchType,
+    fileUrl: window.bookingDetails.fileUrl,
+    date: window.bookingDetails.date,
+    time: window.bookingDetails.time,
+    amount: parseInt(
+      window.bookingDetails.amount.replace("₹","")
+    )
+  });
+
+  showConfirmationPage();
+}
 
         
     </script>

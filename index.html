@@ -313,6 +313,18 @@
         .page.active {
             display: block;
         }
+        .modal-content {
+  max-height: 90vh;       /* modal will never exceed screen height */
+  overflow-y: auto;       /* allows scrolling INSIDE the modal */
+  padding-bottom: 20px;   /* spacing for bottom button */
+}
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;          /* prevents content from touching edges */
+}
+
 
         /* Hero Section */
      

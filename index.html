@@ -18,6 +18,7 @@
             background-color: #f8fafc;
             transition: all 0.3s ease;
         }
+       
 
         /* Dark Mode */
         body.dark {
@@ -154,6 +155,42 @@
             top: 0;
             z-index: 1000;
         }
+        .menu-toggle {
+  display: none;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background: white;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 2000;
+  }
+
+  body.dark .nav-links {
+    background: #1e293b;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+}
+
 
         .nav-container {
             display: flex;
@@ -278,6 +315,8 @@
         }
 
         /* Hero Section */
+     
+
         .hero {
             background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
             color: white;
@@ -373,6 +412,43 @@
             border-radius: 6px;
             font-size: 0.9rem;
         }
+        .hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: white;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    display: none;
+    z-index: 2000;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  body.dark .nav-links {
+    background: #1e293b;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+}
+
 
         .mentors-grid {
             display: grid;
@@ -823,6 +899,42 @@
         .session-item:last-child {
             border-bottom: none;
         }
+        .menu-toggle {
+  display: none;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background: white;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 2000;
+  }
+
+  body.dark .nav-links {
+    background: #1e293b;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+}
+
 
         .status-badge {
             padding: 4px 12px;
@@ -889,9 +1001,8 @@
                 gap: 1rem;
             }
             
-            .nav-links li:not(:last-child) {
-                display: none;
-            }
+            
+
 
             .hero h1 {
                 font-size: 2.5rem;
@@ -924,28 +1035,33 @@
     <!-- Navigation -->
     <nav>
         <div class="container">
-            <div class="nav-container">
-                <div class="logo">UpStriders</div>
-                <ul class="nav-links">
-                    <li><a href="#" onclick="showPage('home')" class="active">Home</a></li>
-                    <li><a href="#" onclick="showPage('mentors')">Pitch Your Idea</a></li>
-                    <li><a href="#" onclick="showPage('idea-marketplace')">Idea Marketplace</a></li>
-                    <!-- <li><a href="#" onclick="showPage('my-pitches')">My Pitches</a></li> -->
-                    <div> <!-- //style="text-align:center; margin:3rem 0; -->
-                         
-  <button class="btn btn-primary" onclick="openMentorModal()">
-    🎓 Become a Mentor
-  </button>
-</div>
-<button class="btn btn-outline" onclick="openAuthModal()">
-  🔐 Sign In / Sign Up
+            <div class="nav-right">
+  <!-- <button class="menu-toggle" onclick="toggleMenu()">☰</button> -->
+  <div class="logo">UpStriders</div>
+<button class="hamburger" onclick="toggleMobileMenu()">
+  ☰
 </button>
 
 
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="showPage('home')" class="active">Home</a></li>
+    <li><a href="#" onclick="showPage('mentors')">Pitch Your Idea</a></li>
+    <li><a href="#" onclick="showPage('idea-marketplace')">Idea Marketplace</a></li>
 
-                    <li><button class="theme-toggle" onclick="toggleTheme()">🌙</button></li>
-                </ul>
-            </div>
+    <li>
+      <button class="btn btn-primary" onclick="openMentorModal()">🎓 Become a Mentor</button>
+    </li>
+
+    <li>
+      <button class="btn btn-outline" onclick="openAuthModal()">🔐 Sign In / Sign Up</button>
+    </li>
+
+    <li>
+      <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </li>
+  </ul>
+</div>
+
             
         </div>
     </nav>
@@ -1656,7 +1772,15 @@
     return url.includes("drive.google.com");
   }
 </script>
-
+<script>
+function toggleMenu() {
+  document.getElementById("navLinks").classList.toggle("show");
+}
+</script>
+<script>function toggleMobileMenu() {
+  document.querySelector(".nav-links").classList.toggle("show");
+}
+</script>
 
     <script>
   function openAuthModal() {

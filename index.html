@@ -1370,6 +1370,24 @@
       <p style="font-size:0.9rem;color:#64748b;margin:1rem 0;">
         After payment, click the button below.
       </p>
+      <div style="margin:1.5rem 0; text-align:left;">
+  <label style="font-weight:600;">
+    UPI Transaction / UTR ID *
+  </label>
+
+  <input
+    type="text"
+    id="paymentTxnId"
+    placeholder="Eg: 324923849234"
+    required
+    style="width:100%; padding:10px; border:2px solid #e5e7eb; border-radius:6px; margin-top:0.5rem;"
+  />
+
+  <p style="font-size:0.85rem; color:#64748b; margin-top:0.25rem;">
+    You can find this in your payment app after paying.
+  </p>
+</div>
+
 
       <button class="btn btn-primary" onclick="confirmManualPayment()">
         ✅ I’ve Paid
@@ -3082,17 +3100,20 @@ async function saveBooking(details) {
   console.log("Saving booking:", details);
 
   const { error } = await supabase
-    .from("finalbookings")
-    .insert([{
-  user_id: user.id,
-  user_email: user.email,
-  mentor_name: details.mentor,
-  pitch_type: details.pitchType,
-  file_url: details.fileUrl,
-  session_date: details.date,
-  session_time: details.time,
-  amount_paid: details.amount
-}]);
+  .from("finalbookings")
+  .insert([{
+    user_id: user.id,
+    user_email: user.email,
+    mentor_name: details.mentor,
+    pitch_type: details.pitchType,
+    file_url: details.fileUrl,
+    session_date: details.date,
+    session_time: details.time,
+    amount_paid: details.amount,
+    transaction_id: details.transaction_id,
+    payment_status: details.payment_status
+  }]);
+
 
 
   if (error) {
@@ -3103,7 +3124,33 @@ async function saveBooking(details) {
     console.log("Booking saved successfully");
   }
 }
+// async function confirmManualPayment() {
+
+//   if (!window.bookingDetails) {
+//     alert("No booking found");
+//     return;
+//   }
+
+//   await saveBooking({
+//     mentor: window.bookingDetails.mentor,
+//     pitchType: window.bookingDetails.pitchType,
+//     fileUrl: window.bookingDetails.fileUrl,
+//     date: window.bookingDetails.date,
+//     time: window.bookingDetails.time,
+//     amount: parseInt(
+//       window.bookingDetails.amount.replace("₹","")
+//     )
+//   });
+
+//   showConfirmationPage();
+// }
 async function confirmManualPayment() {
+  const txnId = document.getElementById("paymentTxnId").value.trim();
+
+  if (!txnId) {
+    alert("Please enter the transaction / UTR ID");
+    return;
+  }
 
   if (!window.bookingDetails) {
     alert("No booking found");
@@ -3118,11 +3165,15 @@ async function confirmManualPayment() {
     time: window.bookingDetails.time,
     amount: parseInt(
       window.bookingDetails.amount.replace("₹","")
-    )
+    ),
+    transaction_id: txnId,
+    payment_status: "pending"
   });
 
+  alert("Payment submitted for verification ✅");
   showConfirmationPage();
 }
+
 
         
     </script>

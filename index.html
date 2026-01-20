@@ -1963,8 +1963,31 @@ async function uploadPitchFile() {
 
 
     <script>
+        window.editingIdeaId = null;
+
         console.log("JS loaded");
 
+function openEditIdeaModal(ideaId) {
+  const idea = window.ideas.find(i => i.id === ideaId);
+  if (!idea) return;
+
+  window.editingIdeaId = ideaId;
+
+  document.getElementById("ideaTitle").value = idea.title;
+  document.getElementById("ideaCategory").value = idea.category;
+  document.getElementById("ideaBrief").value = idea.description;
+  document.getElementById("ideaFull").value = idea.problem;
+  document.getElementById("ideaStage").value = idea.stage;
+
+  updateCharCount("ideaBrief", 200);
+  updateCharCount("ideaFull", 2000);
+
+  document.querySelector(
+    "#postIdeaModal button[type='submit']"
+  ).textContent = "💾 Update Idea";
+
+  document.getElementById("postIdeaModal").classList.add("active");
+}
 
         function openMentorModal() {
   document.getElementById("mentorModal").classList.add("active");
@@ -2564,24 +2587,36 @@ async function loadIdeas() {
           <span>👍 ${idea.upvotes} validations</span>
         </div>
 
-        <div style="display:flex;gap:0.5rem;margin-top:1rem;">
-          <button class="btn btn-primary"
-            onclick="viewIdeaDetails('${idea.id}')"
+        <div style="display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;">
+  <button class="btn btn-primary"
+    onclick="viewIdeaDetails('${idea.id}')"
+    style="flex:1;">
+    View details
+  </button>
 
-            style="flex:1;">
-            View details
-          </button>
+  <button class="btn btn-outline"
+    onclick="upvoteIdea('${idea.id}')">
+    👍
+  </button>
 
-          <button class="btn btn-outline"
-            onclick="upvoteIdea('${idea.id}')">
-            👍
-          </button>
-        </div>
+  ${
+    window.currentUser && idea.author_id === window.currentUser.id
+      ? `
+        <button class="btn btn-outline"
+          onclick="openEditIdeaModal('${idea.id}')">
+          ✏️ Edit
+        </button>
 
-        <div style="margin-top:0.75rem;font-size:0.8rem;color:#64748b;">
-          Posted by ${idea.author_name}
-        </div>
-      </div>
+        <button class="btn btn-outline"
+          onclick="deleteIdea('${idea.id}')"
+          style="border-color:#dc2626;color:#dc2626;">
+          🗑️ Delete
+        </button>
+      `
+      : ""
+  }
+</div>
+
     `;
 
     grid.innerHTML += card;
@@ -2600,13 +2635,17 @@ async function loadIdeas() {
 }
 
 
-        function closePostIdeaModal() {
-            document.getElementById('postIdeaModal').classList.remove('active');
-            document.querySelector('#postIdeaModal form').reset();
-            document.getElementById('ideaBriefCount').textContent = '0';
-            document.getElementById('ideaFullCount').textContent = '0';
-            document.getElementById('licenseInfo').style.display = 'none';
-        }
+       function closePostIdeaModal() {
+  window.editingIdeaId = null;
+
+  document.querySelector("#postIdeaModal form").reset();
+  document.querySelector(
+    "#postIdeaModal button[type='submit']"
+  ).textContent = "🔒 Post Protected Idea";
+
+  document.getElementById("postIdeaModal").classList.remove("active");
+}
+
 
         function updateCharCount(fieldId, maxLength) {
             const field = document.getElementById(fieldId);
@@ -2619,6 +2658,31 @@ async function loadIdeas() {
                 countSpan.style.color = '#64748b';
             }
         }
+        async function deleteIdea(ideaId) {
+  if (!window.currentUser) return;
+
+  const confirmDelete = confirm(
+    "Are you sure you want to delete this idea?\nThis action cannot be undone."
+  );
+
+  if (!confirmDelete) return;
+
+  const { error } = await supabase
+    .from("ideas")
+    .delete()
+    .eq("id", ideaId)
+    .eq("author_id", window.currentUser.id); // 🔒 safety
+
+  if (error) {
+    console.error(error);
+    alert("Failed to delete idea");
+    return;
+  }
+
+  alert("Idea deleted successfully 🗑️");
+  loadIdeas();
+}
+
 
         function showLicenseInfo() {
             const license = document.getElementById('ideaLicense').value;
@@ -2669,44 +2733,53 @@ async function loadIdeas() {
                 licenseInfo.style.display = 'none';
             }
         }
-
-      async function submitIdea(event) {
+async function submitIdea(event) {
   event.preventDefault();
 
   if (!window.currentUser) {
-    alert("Please sign in to post an idea");
+    alert("Please sign in");
     return;
   }
 
-  const title = document.getElementById("ideaTitle").value;
-  const category = document.getElementById("ideaCategory").value;
-  const brief = document.getElementById("ideaBrief").value;
-  const full = document.getElementById("ideaFull").value;
-  const stage = document.getElementById("ideaStage").value;
-
-  const idea = {
-    title: title,
-    category: category,
-    description: brief,     // ✅ maps correctly
-    problem: full,          // ✅ store full text as problem for now
-    solution: full,         // ✅ same content (can split later)
-    stage: stage,
-    author_id: window.currentUser.id,
-    author_name: window.currentUser.email.split("@")[0],
-    upvotes: 0
+  const ideaData = {
+    title: document.getElementById("ideaTitle").value,
+    category: document.getElementById("ideaCategory").value,
+    description: document.getElementById("ideaBrief").value,
+    problem: document.getElementById("ideaFull").value,
+    solution: document.getElementById("ideaFull").value,
+    stage: document.getElementById("ideaStage").value,
   };
 
-  const { error } = await supabase
-    .from("ideas")
-    .insert([idea]);
+  let error;
+
+  if (window.editingIdeaId) {
+    // ✏️ UPDATE
+    ({ error } = await supabase
+      .from("ideas")
+      .update(ideaData)
+      .eq("id", window.editingIdeaId)
+      .eq("author_id", window.currentUser.id));
+  } else {
+    // 📝 CREATE
+    ({ error } = await supabase
+      .from("ideas")
+      .insert([{
+        ...ideaData,
+        author_id: window.currentUser.id,
+        author_name: window.currentUser.email.split("@")[0],
+        upvotes: 0
+      }]));
+  }
 
   if (error) {
-    console.error("Supabase insert error:", error);
+    console.error(error);
     alert(error.message);
     return;
   }
 
-  alert("Idea posted successfully 🚀");
+  alert(window.editingIdeaId ? "Idea updated ✨" : "Idea posted 🚀");
+
+  window.editingIdeaId = null;
   closePostIdeaModal();
   loadIdeas();
 }

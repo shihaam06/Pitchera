@@ -2179,11 +2179,11 @@ async function loadIdeas() {
                 expertise: "Tech Startups",
                 experience: "10-15",
                 industry: "tech",
-                liveRate: 699,
-                fileRate: 299,
+                liveRate: 0,
+                fileRate: 0,
                 bio: "Former VP at Google, helped launch 3 successful startups. Specialized in product strategy and scaling teams.",
                 avatar: "ZA",
-                type: "professional",
+                type: "founder",
                 rating: 0,
                 reviewCount: 0,
                 reviews: [
@@ -2196,8 +2196,8 @@ async function loadIdeas() {
                 expertise: "Fintech",
                 experience: "Student",
                 industry: "Business",
-                liveRate: 699,
-                fileRate: 299,
+                liveRate: 0,
+                fileRate: 0,
                 bio: "I am student of MSRIT, and a student founder",
                 avatar: "SH",
                 type: "MSRIT, Bangalore",
@@ -2213,16 +2213,16 @@ async function loadIdeas() {
                 expertise: "Digital Marketing",
                 experience: "5-10",
                 industry: "marketing",
-                liveRate: 1199,
-                fileRate: 299,
+                liveRate: 0,
+                fileRate: 0,
                 bio: "A line about u and ur experinces",
                 avatar: "CS",
                 type: "professional",
                 rating: 4.9,
                 reviewCount: 156,
                 reviews: [
-                    { text: "reviews", author: "Karan T." },
-                    { text: "reviews.", author: "Sneha P." }
+                    { text: "reviews", author: "" },
+                    { text: "reviews.", author: "" }
                 ]
             },
             {
@@ -2230,16 +2230,16 @@ async function loadIdeas() {
                 expertise: "Fintech & Banking",
                 experience: "15+",
                 industry: "finance",
-                liveRate: 1199,
-                fileRate: 299,
+                liveRate: 0,
+                fileRate: 0,
                 bio: "A line about u and ur experinces",
                 avatar: "CS",
-                type: "professional",
-                rating: 4.7,
-                reviewCount: 73,
+                type: "professor",
+                rating: 0,
+                reviewCount: 0,
                 reviews: [
-                    { text: "reviews", author: "Vikram A." },
-                    { text: "reviews", author: "Anjali M." }
+                    { text: "reviews", author: "" },
+                    { text: "reviews", author: "" }
                 ]
             },
             {
@@ -2247,16 +2247,16 @@ async function loadIdeas() {
                 expertise: "UX/UI Design",
                 experience: "5-10",
                 industry: "design",
-                liveRate: 1199,
-                fileRate: 299,
+                liveRate: 0,
+                fileRate: 0,
                 bio: "A line about u and ur experinces",
                 avatar: "CS",
                 type: "professional",
-                rating: 4.9,
-                reviewCount: 142,
+                rating: 0,
+                reviewCount: 0,
                 reviews: [
-                    { text: "reviews", author: "Rohan G." },
-                    { text: "reviews", author: "Divya L." }
+                    { text: "reviews", author: "" },
+                    { text: "reviews", author: "" }
                 ]
             },
             {
@@ -2264,16 +2264,16 @@ async function loadIdeas() {
                 expertise: "E-commerce",
                 experience: "10-15",
                 industry: "tech",
-                liveRate: 1199,
-                fileRate: 299,
+                liveRate: 0,
+                fileRate: 0,
                 bio: "A line about u and ur experinces.",
                 avatar: "CS",
                 type: "professional",
-                rating: 4.8,
-                reviewCount: 98,
+                rating: 0,
+                reviewCount: 0,
                 reviews: [
-                    { text: "reviews", author: "Shreya B." },
-                    { text: "ppls review", author: "Arjun V." }
+                    { text: "reviews", author: "" },
+                    { text: "review", author: "" }
                 ]
             },
             
@@ -2289,11 +2289,11 @@ async function loadIdeas() {
                 avatar: "CS",
                 type: "postion",
                 college: "clg",
-                rating: 4.6,
-                reviewCount: 45,
+                rating: 0,
+                reviewCount: 0,
                 reviews: [
-                    { text: "reviews from ppl", author: "Ravi M." },
-                    { text: "more reviews", author: "Pooja K." }
+                    { text: "reviews from ppl", author: "" },
+                    { text: "more reviews", author: "" }
                 ]
             },
             {
@@ -2307,11 +2307,11 @@ async function loadIdeas() {
                 avatar: "CS",
                 type: "designation",
                 college: "clg",
-                rating: 4.7,
-                reviewCount: 38,
+                rating: 0,
+                reviewCount: 0,
                 reviews: [
-                    { text: "ppls review", author: "Manish S." },
-                    { text: "more reviews", author: "Kavya R." }
+                    { text: "ppls review", author: "" },
+                    { text: "more reviews", author: "" }
                 ]
             },
             {
@@ -2494,7 +2494,9 @@ async function loadIdeas() {
             
             mentorsToRender.forEach(mentor => {
                 const typeLabel = mentor.type === 'professional' ? 'Industry Pro' : 
-                                mentor.type === 'senior' ? 'College Senior' : 'Club President';
+                mentor.type === 'founder' ? 'Founder' : 
+                mentor.type === 'professor' ? 'Professor' : 
+                                mentor.type === 'Student' ? 'student' : 'Club President';
                 const collegeInfo = mentor.college ? `<div class="mentor-college">${mentor.college}${mentor.position ? ' • ' + mentor.position : ''}</div>` : '';
                 
                 const reviewsHtml = mentor.reviews.map(review => 

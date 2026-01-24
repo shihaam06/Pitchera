@@ -1174,6 +1174,12 @@ body {
   background-size: 400% 400%;
   animation: gradientWave 22s ease infinite;
 }
+.schedule-note {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-align: center;
+}
 
 
     </style>
@@ -1355,13 +1361,15 @@ body {
                             <h4>📄 Pitch Deck Review</h4>
                             <p>Upload your pitch deck, business plan, or demo video for detailed feedback</p>
                             <small style="color: #64748b;">Written feedback within 24-48 hours</small>
-                            <div style="margin-top: 0.5rem; font-weight: bold; color: #f59e0b;">Starting ₹79 per pitch</div>
+                            <div id="filePrice" style="margin-top: 0.5rem; font-weight: bold; color: #f59e0b;"></div>
+
                         </div>
                         <div class="pitch-option" onclick="selectPitchOption('live')">
                             <h4>🎥 Live Pitch Session</h4>
                             <p>Present your idea live and get real-time feedback and Q&A</p>
                             <small style="color: #64748b;">30-60 minute interactive sessions</small>
-                            <div style="margin-top: 0.5rem; font-weight: bold; color: #f59e0b;">₹1,250 per session</div>
+                            <div id="livePrice" style="margin-top: 0.5rem; font-weight: bold; color: #f59e0b;"></div>
+
                         </div>
                     </div>
 
@@ -1381,27 +1389,27 @@ body {
                     
                     <div id="calendarSection">
                         <div class="calendar-grid">
-                            <div class="calendar-day">Mon</div>
                             <div class="calendar-day">Tue</div>
                             <div class="calendar-day">Wed</div>
                             <div class="calendar-day">Thu</div>
                             <div class="calendar-day">Fri</div>
                             <div class="calendar-day">Sat</div>
                             <div class="calendar-day">Sun</div>
-                            <div class="calendar-day">1</div>
+                            <div class="calendar-day">Mon</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">27</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">28</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">29</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">30</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">31</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">1</div>
                             <div class="calendar-day available" onclick="selectDate(this)">2</div>
-                            <div class="calendar-day">3</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">3</div>
                             <div class="calendar-day available" onclick="selectDate(this)">4</div>
                             <div class="calendar-day available" onclick="selectDate(this)">5</div>
-                            <div class="calendar-day">6</div>
-                            <div class="calendar-day">7</div>
+                            <div class="calendar-day available" onclick="selectDate(this)" >6</div>
+                            <div class="calendar-day available" onclick="selectDate(this)">7</div>
                             <div class="calendar-day available" onclick="selectDate(this)">8</div>
                             <div class="calendar-day available" onclick="selectDate(this)">9</div>
-                            <div class="calendar-day">10</div>
-                            <div class="calendar-day available" onclick="selectDate(this)">11</div>
-                            <div class="calendar-day available" onclick="selectDate(this)">12</div>
-                            <div class="calendar-day">13</div>
-                            <div class="calendar-day">14</div>
                         </div>
 
                         <div class="time-slots" id="timeSlots" style="display: none;">
@@ -1410,7 +1418,12 @@ body {
                             <div class="time-slot" onclick="selectTime(this)">2:00 PM</div>
                             <div class="time-slot" onclick="selectTime(this)">3:30 PM</div>
                             <div class="time-slot" onclick="selectTime(this)">5:00 PM</div>
+                            <div class="time-slot" onclick="selectTime(this)">6:30 PM</div>
                         </div>
+                        <p class="schedule-note">
+  ℹ️ If there’s any change in the mentor’s schedule, your session will be rescheduled smoothly.
+</p>
+
                     </div>
 
                     <div id="fileOnlyMessage" style="display: none; text-align: center; padding: 2rem; background: #f0f9ff; border-radius: 8px; margin-bottom: 2rem;">
@@ -1457,7 +1470,7 @@ body {
                     <div>Total Pitches</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">₹2,450</div>
+                    <div class="stat-number">₹2,450</div>onclick="selectDate(this)"
                     <div>Total Spent</div>
                 </div>
                 <div class="stat-card">
@@ -2092,6 +2105,10 @@ async function uploadPitchFile() {
 
 
     <script>
+        let selectedMentor = null;
+let selectedPitchType = null;
+let selectedPrice = 0;
+
         window.editingIdeaId = null;
 
         console.log("JS loaded");
@@ -2327,15 +2344,15 @@ async function loadIdeas() {
         const mentors = [
             // Industry Professionals
             {
-                name: "Zama Arsh",
-                expertise: "Tech Startups",
-                experience: "10-15",
-                industry: "tech",
-                liveRate: 0,
-                fileRate: 0,
-                bio: "Former VP at Google, helped launch 3 successful startups. Specialized in product strategy and scaling teams.",
-                avatar: "ZA",
-                type: "founder",
+                name: "Nitin Bhushan K N ",
+                expertise: "Product Development",
+                experience: "",
+                industry: "Product Management",
+                liveRate: 999,
+                fileRate: 499,
+                bio: "An enthusiastic person and a technology business savy guy who transforms people lives and make a real difference.",
+                avatar: "NB",
+                type: "professional",
                 rating: 0,
                 reviewCount: 0,
                 reviews: [
@@ -2678,7 +2695,8 @@ async function loadIdeas() {
                             <div class="mentor-reviews">
                                 ${reviewsHtml}
                             </div>
-                            <button class="btn btn-primary" onclick="selectMentor('${mentor.name}', ${mentor.liveRate}, ${mentor.fileRate})">Pitch to ${mentor.name.split(' ')[0]}</button>
+                            <button class="btn btn-primary" onclick="selectMentor(${mentors.indexOf(mentor)})"
+>Pitch to ${mentor.name.split(' ')[0]}</button>
                         </div>
                     </div>
                 `;
@@ -3088,11 +3106,26 @@ async function upvoteIdea(ideaId) {
         }
 
         // Select mentor and go to booking
-        function selectMentor(mentorName, liveRate, fileRate) {
-            window.selectedMentor = {name: mentorName, liveRate: liveRate, fileRate: fileRate};
-            showPage('booking');
-            updatePricing(liveRate);
-        }
+       function selectMentor(index) {
+  window.selectedMentor = mentors[index];
+
+  showPage("booking");
+
+  // Set prices on booking page
+  document.getElementById("filePrice").textContent =
+    window.selectedMentor.fileRate > 0
+      ? `₹${window.selectedMentor.fileRate}`
+      : "Not available";
+
+  document.getElementById("livePrice").textContent =
+    window.selectedMentor.liveRate > 0
+      ? `₹${window.selectedMentor.liveRate} per session`
+      : "Not available";
+
+  // default pricing (live)
+  updatePricing(window.selectedMentor.liveRate);
+}
+
 
         // Pitch option selection
         let selectedPitchMethod = null;
@@ -3116,6 +3149,14 @@ async function upvoteIdea(ideaId) {
                 schedulingTitle.textContent = 'Review Details';
                 
                 if (window.selectedMentor) {
+                    if (!window.selectedMentor) return;
+
+if (method === "file") {
+  updatePricing(window.selectedMentor.fileRate);
+} else {
+  updatePricing(window.selectedMentor.liveRate);
+}
+
                     updatePricing(window.selectedMentor.fileRate);
                 }
             } else {
@@ -3131,7 +3172,7 @@ async function upvoteIdea(ideaId) {
         }
 
         function updatePricing(rate) {
-            const platformFee = Math.round(rate * 0.1);
+            const platformFee = 0;
             const total = rate + platformFee;
             
             document.getElementById('sessionFee').textContent = `₹${rate}`;

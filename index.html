@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UpStriders - Pitch Evaluation Platform</title>
@@ -319,6 +324,10 @@ nav {
         
 body {
   padding-top: 80px; /* nav height */
+}
+#appWrapper {
+  opacity: 0;
+  transition: opacity 0.8s ease;
 }
 
 
@@ -1074,11 +1083,130 @@ body {
   max-height: 90vh;
   overflow-y: auto;
 }
+/* =========================
+   INTRO OVERLAY
+========================= */
+#introScreen {
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+    url("bluecrumblebanground.jpg") center/cover no-repeat;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.intro-content {
+  text-align: center;
+  color: white;
+  animation: fadeUp 1s ease;
+}
+
+.intro-content h4 {
+  letter-spacing: 4px;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.intro-content h1 {
+  font-size: 3.8rem;
+  margin: 0.5rem 0;
+}
+
+.intro-content p {
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+
+#enterSiteBtn {
+  padding: 12px 30px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: white;
+  color: #1d4ed8;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.intro-socials {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.intro-socials a {
+  color: white;
+  font-size: 1.4rem;
+  opacity: 0.9;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.intro-socials a:hover {
+  transform: translateY(-4px);
+  opacity: 1;
+}
+/* ===== Animated Gradient Background ===== */
+.animated-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(
+    120deg,
+    #1e3a8a,
+    #2563eb,
+    #0ea5e9,
+    #3b82f6
+  );
+  background-size: 400% 400%;
+  animation: gradientWave 22s ease infinite;
+}
+
 
     </style>
 </head>
 <body>
+<!-- Intro Screen -->
+<div id="introScreen">
+  <div class="intro-content">
+    <h4 class="intro-top">WELCOME TO</h4>
+    <h1 class="intro-title">UpStriders</h1>
+    <p class="intro-tagline">Giving every idea a stage</p>
+
+    <button id="enterSiteBtn" class="intro-btn">
+      LET’S GET STARTED
+    </button>
+
+    <div class="intro-socials">
+  <a href="https://www.instagram.com/yourpage" target="_blank">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+  <a href="https://www.linkedin.com/company/yourpage" target="_blank">
+    <i class="fab fa-linkedin-in"></i>
+  </a>
+</div>
+
+  </div>
+</div>
+
+
+    
     <!-- Navigation -->
+     <div id="appwrapper">
     <nav>
         <div class="container">
             <div class="nav-right">
@@ -1779,6 +1907,7 @@ body {
       <b>Amount:</b> <span id="upiAmount"></span><br>
 
 </div>
+  </div>
   </div>
 
 
@@ -3335,6 +3464,20 @@ async function confirmManualPayment() {
   alert("Payment submitted for verification ✅");
   showConfirmationPage();
 }
+
+  document.getElementById("enterSiteBtn").addEventListener("click", () => {
+    const intro = document.getElementById("introScreen");
+    const app = document.getElementById("appWrapper");
+
+    intro.style.opacity = "0";
+    intro.style.transform = "scale(1.05)";
+
+    setTimeout(() => {
+      intro.style.display = "none";
+      app.style.opacity = "1";
+    }, 800);
+  });
+
 
 
         

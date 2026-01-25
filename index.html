@@ -334,11 +334,83 @@ body {
         .page.active {
             display: block;
         }
-        .modal-content {
-  max-height: 90vh;       /* modal will never exceed screen height */
-  overflow-y: auto;       /* allows scrolling INSIDE the modal */
-  padding-bottom: 20px;   /* spacing for bottom button */
+      .modal-content {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px;
+  width: 420px;
+  max-width: 90%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  animation: modalFadeUp 0.35s ease;
 }
+
+@keyframes modalFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+#authTitle {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 24px;
+}
+#authForm input {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  border: 1.8px solid #e5e7eb;
+  background: #f9fafb;
+  transition: all 0.2s ease;
+}
+
+#authForm input:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+#authSubmitBtn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 6px;
+}
+#authSwitchText {
+  color: #64748b;
+}
+
+#authSwitchLink {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+#authSwitchLink:hover {
+  text-decoration: underline;
+}
+.modal .btn-outline {
+  margin-top: 16px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1.5px solid #e5e7eb;
+  color: #475569;
+  background: transparent;
+}
+
+.modal .btn-outline:hover {
+  background: #f1f5f9;
+}
+
 .modal {
   display: flex;
   align-items: center;
@@ -1181,6 +1253,26 @@ body {
   text-align: center;
 }
 
+.wave-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+
+  background: 
+    radial-gradient(60% 80% at 20% 30%, #60a5fa 0%, transparent 60%),
+    radial-gradient(50% 70% at 80% 20%, #38bdf8 0%, transparent 55%),
+    radial-gradient(60% 80% at 50% 80%, #1d4ed8 0%, transparent 65%),
+    linear-gradient(120deg, #0f172a, #1e3a8a, #2563eb);
+
+  background-size: 200% 200%;
+  animation: waveMove 18s ease-in-out infinite;
+}
+
+@keyframes waveMove {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
     </style>
 </head>
@@ -1212,7 +1304,11 @@ body {
 
     
     <!-- Navigation -->
-     <div id="appwrapper">
+     <div id="wave-bg"
+></div>   
+<div id="animated-bg"></div>
+
+<div id="appwrapper">
     <nav>
         <div class="container">
             <div class="nav-right">
@@ -1229,12 +1325,15 @@ body {
     <li><a href="#" onclick="showPage('idea-marketplace')">Idea Marketplace</a></li>
 
     <li>
-      <button class="btn btn-primary" onclick="openMentorModal()">🎓 Become a Mentor</button>
+      <button class="btn btn-primary" onclick="openMentorModal()">Become a Mentor</button>
     </li>
 
     <li>
-      <button class="btn btn-outline" onclick="openAuthModal()"> Sign In / Sign Up</button>
+      <button id="signinBtn"  class="btn btn-outline" onclick="openAuthModal()"> Sign In</button>
     </li>
+    <li><button id="logoutBtn" class="btn btn-outline" style="display:none;">
+  Logout
+</button></li>
 
     <li>
       <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
@@ -1878,35 +1977,68 @@ body {
 <div id="authModal" class="modal">
   <div class="modal-content" style="max-width:420px; text-align:left;">
 
-    <h2 style="text-align:center; margin-bottom:1rem;">Welcome to UpStriders</h2>
+    <h2 id="authTitle"></h2>
 
-    <form id="authForm">
-      <div class="form-group">
-        <label>Email</label>
-        <input id="authEmail" type="email" required />
-      </div>
+<form id="authForm">
+  <input type="email" id="authEmail" placeholder="Email" required />
+  <input type="password" id="authPassword" placeholder="Password" required />
 
-      <div class="form-group">
-        <label>Password</label>
-        <input id="authPassword" type="password" required />
-      </div>
+  <button type="submit" id="authSubmitBtn" class="btn btn-primary">
+    Sign In
+  </button>
+</form>
 
-      <button type="submit" class="btn btn-primary" style="width:100%;">
-        Continue
-      </button>
-    </form>
+<p style="text-align:center; margin-top:10px; font-size:0.9rem;">
+  <span id="authSwitchText"></span>
+  <a href="#" id="authSwitchLink"></a>
+</p>
 
-    <p style="font-size:0.85rem; color:#64748b; margin-top:1rem;">
-      New users will be signed up automatically.
     </p>
 
-    <button class="btn btn-outline" onclick="closeAuthModal()" style="width:100%; margin-top:0.75rem;">
+    <button class="btn btn-outline" onclick="closeAuthModal()" id="authCancelBtn" style="width:100%; margin-top:0.75rem;">
       Cancel
     </button>
 
   </div>
-  </div>
+</div>
   <!-- UPI Payment Modal -->
+<div id="upiModal" class="modal">
+  <div class="modal-content" style="max-width:420px; text-align:left;">
+
+    <h2 style="text-align:center;">💸 Complete Payment</h2>
+
+    <p style="color:#64748b; font-size:0.95rem; margin-bottom:1rem;">
+      Pay via UPI to confirm your booking.
+    </p>
+
+    <div style="background:#f8fafc; padding:1rem; border-radius:8px; margin-bottom:1rem;">
+      <b>Amount:</b> <span id="upiAmount"></span><br>
+
+</div>
+  </div>
+  </div>
+<script>
+  let authMode = "signin"; // signin | signup
+
+  function switchToSignup() {
+    authMode = "signup";
+    document.getElementById("authTitle").textContent = "Create your UpStriders account";
+    document.querySelector("#authForm button").textContent = "Create Account";
+  }
+
+  function switchToSignin() {
+    authMode = "signin";
+    document.getElementById("authTitle").textContent = "Sign in to UpStriders";
+    document.querySelector("#authForm button").textContent = "Sign In";
+  }
+</script>
+document.getElementById("authCancelBtn").addEventListener("click", () => {
+  const modal = document.getElementById("authModal");
+  modal.classList.remove("active");
+});
+</script>
+
+  UPI Payment Modal
 <div id="upiModal" class="modal">
   <div class="modal-content" style="max-width:420px; text-align:left;">
 
@@ -1953,61 +2085,113 @@ function toggleMenu() {
 </script>
 
     <script>
+     document.getElementById("logoutBtn").addEventListener("click", async () => {
+  const confirmLogout = confirm("Are you sure you want to log out?");
+
+  if (!confirmLogout) return;
+
+  await supabase.auth.signOut();
+  await updateAuthState();
+});
+
+
   function openAuthModal() {
-    document.getElementById("authModal").classList.add("active");
+  authMode = "signin";
+  updateAuthUI();
+  document.getElementById("authModal").classList.add("active");
+}
+
+function updateAuthUI() {
+  const title = document.getElementById("authTitle");
+  const submitBtn = document.getElementById("authSubmitBtn");
+  const switchText = document.getElementById("authSwitchText");
+  const switchLink = document.getElementById("authSwitchLink");
+
+  if (authMode === "signin") {
+    title.textContent = "Sign in to UpStriders";
+    submitBtn.textContent = "Sign In";
+    switchText.textContent = "New here?";
+    switchLink.textContent = "Create an account";
+    switchLink.onclick = switchToSignup;
+  } else {
+    title.textContent = "Create your UpStriders account";
+    submitBtn.textContent = "Create Account";
+    switchText.textContent = "Already have an account?";
+    switchLink.textContent = "Sign in";
+    switchLink.onclick = switchToSignin;
   }
+}
+function switchToSignup(e) {
+  if (e) e.preventDefault();
+  authMode = "signup";
+  updateAuthUI();
+}
+
+function switchToSignin(e) {
+  if (e) e.preventDefault();
+  authMode = "signin";
+  updateAuthUI();
+}
+
 
   function closeAuthModal() {
-    document.getElementById("authModal").classList.remove("active");
-  }
+  document.getElementById("authModal").classList.remove("active");
+}
+
 </script>
 
 
 <script>
-  document.getElementById("authForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+ document.getElementById("authForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    const email = document.getElementById("authEmail").value;
-    const password = document.getElementById("authPassword").value;
+  const email = authEmail.value.trim();
+  const password = authPassword.value.trim();
 
-    // 1️⃣ Try login
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+  if (!email || !password) {
+    alert("Please fill all fields");
+    return;
+  }
 
-    if (error) {
-      // 2️⃣ If login fails → signup
-      const { error: signupError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+  let result;
 
-      if (signupError) {
-        alert(signupError.message);
-        return;
-      }
+  if (authMode === "signin") {
+    result = await supabase.auth.signInWithPassword({ email, password });
+  } else {
+    result = await supabase.auth.signUp({ email, password });
+  }
 
-      alert("Account created & logged in!");
-    } else {
-      alert("Logged in successfully!");
-    }
+  if (result.error) {
+    alert(result.error.message);
+    return;
+  }
 
-    closeAuthModal();
-    updateAuthState();
-  });
+  closeAuthModal();
+  updateAuthState();
+});
+
+
 </script>
 <script>
-  async function updateAuthState() {
-    const { data: { user } } = await supabase.auth.getUser();
+ async function updateAuthState() {
+  const { data: { user } } = await supabase.auth.getUser();
 
-    if (user) {
-      console.log("User logged in:", user.id, user.email);
-      window.currentUser = user;
-    } else {
-      window.currentUser = null;
-    }
+  const signInBtn = document.getElementById("signinBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (user) {
+    window.currentUser = user;
+
+    // 🔑 UI change
+    signInBtn.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+  } else {
+    window.currentUser = null;
+
+    signInBtn.style.display = "inline-block";
+    logoutBtn.style.display = "none";
   }
+}
 
   // Run on page load
   updateAuthState();
